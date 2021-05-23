@@ -68,7 +68,7 @@ impl EditableLabel {
     }
 
     #[doc(alias = "editing")]
-    pub fn connect_editing_notify<F: Fn(&EditableLabel) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_editing_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_editing_trampoline<F: Fn(&EditableLabel) + 'static>(
             this: *mut ffi::GtkEditableLabel,
             _param_spec: glib::ffi::gpointer,
@@ -316,7 +316,7 @@ impl EditableLabelBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }

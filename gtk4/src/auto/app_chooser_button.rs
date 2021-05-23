@@ -51,7 +51,7 @@ impl AppChooserButton {
     }
 
     #[doc(alias = "gtk_app_chooser_button_append_custom_item")]
-    pub fn append_custom_item<P: IsA<gio::Icon>>(&self, name: &str, label: &str, icon: &P) {
+    pub fn append_custom_item(&self, name: &str, label: &str, icon: &impl IsA<gio::Icon>) {
         unsafe {
             ffi::gtk_app_chooser_button_append_custom_item(
                 self.to_glib_none().0,
@@ -153,7 +153,7 @@ impl AppChooserButton {
     }
 
     #[doc(alias = "changed")]
-    pub fn connect_changed<F: Fn(&AppChooserButton) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_changed<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn changed_trampoline<F: Fn(&AppChooserButton) + 'static>(
             this: *mut ffi::GtkAppChooserButton,
             f: glib::ffi::gpointer,
@@ -175,7 +175,7 @@ impl AppChooserButton {
     }
 
     #[doc(alias = "custom-item-activated")]
-    pub fn connect_custom_item_activated<F: Fn(&AppChooserButton, &str) + 'static>(
+    pub fn connect_custom_item_activated<F: Fn(&Self, &str) + 'static>(
         &self,
         detail: Option<&str>,
         f: F,
@@ -212,10 +212,7 @@ impl AppChooserButton {
     }
 
     #[doc(alias = "heading")]
-    pub fn connect_heading_notify<F: Fn(&AppChooserButton) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_heading_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_heading_trampoline<F: Fn(&AppChooserButton) + 'static>(
             this: *mut ffi::GtkAppChooserButton,
             _param_spec: glib::ffi::gpointer,
@@ -238,10 +235,7 @@ impl AppChooserButton {
     }
 
     #[doc(alias = "modal")]
-    pub fn connect_modal_notify<F: Fn(&AppChooserButton) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_modal_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_modal_trampoline<F: Fn(&AppChooserButton) + 'static>(
             this: *mut ffi::GtkAppChooserButton,
             _param_spec: glib::ffi::gpointer,
@@ -264,7 +258,7 @@ impl AppChooserButton {
     }
 
     #[doc(alias = "show-default-item")]
-    pub fn connect_show_default_item_notify<F: Fn(&AppChooserButton) + 'static>(
+    pub fn connect_show_default_item_notify<F: Fn(&Self) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -292,10 +286,7 @@ impl AppChooserButton {
     }
 
     #[doc(alias = "show-dialog-item")]
-    pub fn connect_show_dialog_item_notify<F: Fn(&AppChooserButton) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_show_dialog_item_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_show_dialog_item_trampoline<
             F: Fn(&AppChooserButton) + 'static,
         >(
@@ -561,7 +552,7 @@ impl AppChooserButtonBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }

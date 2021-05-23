@@ -24,7 +24,7 @@ glib::wrapper! {
 
 impl FlattenListModel {
     #[doc(alias = "gtk_flatten_list_model_new")]
-    pub fn new<P: IsA<gio::ListModel>>(model: Option<&P>) -> FlattenListModel {
+    pub fn new(model: Option<&impl IsA<gio::ListModel>>) -> FlattenListModel {
         assert_initialized_main_thread!();
         unsafe {
             from_glib_full(ffi::gtk_flatten_list_model_new(
@@ -58,7 +58,7 @@ impl FlattenListModel {
     }
 
     #[doc(alias = "gtk_flatten_list_model_set_model")]
-    pub fn set_model<P: IsA<gio::ListModel>>(&self, model: Option<&P>) {
+    pub fn set_model(&self, model: Option<&impl IsA<gio::ListModel>>) {
         unsafe {
             ffi::gtk_flatten_list_model_set_model(
                 self.to_glib_none().0,
@@ -68,10 +68,7 @@ impl FlattenListModel {
     }
 
     #[doc(alias = "model")]
-    pub fn connect_model_notify<F: Fn(&FlattenListModel) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_model_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_model_trampoline<F: Fn(&FlattenListModel) + 'static>(
             this: *mut ffi::GtkFlattenListModel,
             _param_spec: glib::ffi::gpointer,
@@ -119,7 +116,7 @@ impl FlattenListModelBuilder {
             .expect("Failed to create an instance of FlattenListModel")
     }
 
-    pub fn model<P: IsA<gio::ListModel>>(mut self, model: &P) -> Self {
+    pub fn model(mut self, model: &impl IsA<gio::ListModel>) -> Self {
         self.model = Some(model.clone().upcast());
         self
     }

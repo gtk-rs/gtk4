@@ -88,7 +88,7 @@ impl LinkButton {
     }
 
     #[doc(alias = "activate-link")]
-    pub fn connect_activate_link<F: Fn(&LinkButton) -> glib::signal::Inhibit + 'static>(
+    pub fn connect_activate_link<F: Fn(&Self) -> glib::signal::Inhibit + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -115,7 +115,7 @@ impl LinkButton {
     }
 
     #[doc(alias = "uri")]
-    pub fn connect_uri_notify<F: Fn(&LinkButton) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_uri_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_uri_trampoline<F: Fn(&LinkButton) + 'static>(
             this: *mut ffi::GtkLinkButton,
             _param_spec: glib::ffi::gpointer,
@@ -138,7 +138,7 @@ impl LinkButton {
     }
 
     #[doc(alias = "visited")]
-    pub fn connect_visited_notify<F: Fn(&LinkButton) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_visited_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_visited_trampoline<F: Fn(&LinkButton) + 'static>(
             this: *mut ffi::GtkLinkButton,
             _param_spec: glib::ffi::gpointer,
@@ -348,7 +348,7 @@ impl LinkButtonBuilder {
         self
     }
 
-    pub fn child<P: IsA<Widget>>(mut self, child: &P) -> Self {
+    pub fn child(mut self, child: &impl IsA<Widget>) -> Self {
         self.child = Some(child.clone().upcast());
         self
     }
@@ -433,7 +433,7 @@ impl LinkButtonBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }

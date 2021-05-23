@@ -102,7 +102,7 @@ impl DropDown {
     }
 
     #[doc(alias = "gtk_drop_down_set_factory")]
-    pub fn set_factory<P: IsA<ListItemFactory>>(&self, factory: Option<&P>) {
+    pub fn set_factory(&self, factory: Option<&impl IsA<ListItemFactory>>) {
         unsafe {
             ffi::gtk_drop_down_set_factory(
                 self.to_glib_none().0,
@@ -112,7 +112,7 @@ impl DropDown {
     }
 
     #[doc(alias = "gtk_drop_down_set_list_factory")]
-    pub fn set_list_factory<P: IsA<ListItemFactory>>(&self, factory: Option<&P>) {
+    pub fn set_list_factory(&self, factory: Option<&impl IsA<ListItemFactory>>) {
         unsafe {
             ffi::gtk_drop_down_set_list_factory(
                 self.to_glib_none().0,
@@ -122,7 +122,7 @@ impl DropDown {
     }
 
     #[doc(alias = "gtk_drop_down_set_model")]
-    pub fn set_model<P: IsA<gio::ListModel>>(&self, model: Option<&P>) {
+    pub fn set_model(&self, model: Option<&impl IsA<gio::ListModel>>) {
         unsafe {
             ffi::gtk_drop_down_set_model(
                 self.to_glib_none().0,
@@ -139,10 +139,7 @@ impl DropDown {
     }
 
     #[doc(alias = "enable-search")]
-    pub fn connect_enable_search_notify<F: Fn(&DropDown) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_enable_search_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_enable_search_trampoline<F: Fn(&DropDown) + 'static>(
             this: *mut ffi::GtkDropDown,
             _param_spec: glib::ffi::gpointer,
@@ -165,7 +162,7 @@ impl DropDown {
     }
 
     #[doc(alias = "expression")]
-    pub fn connect_expression_notify<F: Fn(&DropDown) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_expression_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_expression_trampoline<F: Fn(&DropDown) + 'static>(
             this: *mut ffi::GtkDropDown,
             _param_spec: glib::ffi::gpointer,
@@ -188,7 +185,7 @@ impl DropDown {
     }
 
     #[doc(alias = "factory")]
-    pub fn connect_factory_notify<F: Fn(&DropDown) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_factory_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_factory_trampoline<F: Fn(&DropDown) + 'static>(
             this: *mut ffi::GtkDropDown,
             _param_spec: glib::ffi::gpointer,
@@ -211,7 +208,7 @@ impl DropDown {
     }
 
     #[doc(alias = "list-factory")]
-    pub fn connect_list_factory_notify<F: Fn(&DropDown) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_list_factory_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_list_factory_trampoline<F: Fn(&DropDown) + 'static>(
             this: *mut ffi::GtkDropDown,
             _param_spec: glib::ffi::gpointer,
@@ -234,7 +231,7 @@ impl DropDown {
     }
 
     #[doc(alias = "model")]
-    pub fn connect_model_notify<F: Fn(&DropDown) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_model_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_model_trampoline<F: Fn(&DropDown) + 'static>(
             this: *mut ffi::GtkDropDown,
             _param_spec: glib::ffi::gpointer,
@@ -257,7 +254,7 @@ impl DropDown {
     }
 
     #[doc(alias = "selected")]
-    pub fn connect_selected_notify<F: Fn(&DropDown) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_selected_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_selected_trampoline<F: Fn(&DropDown) + 'static>(
             this: *mut ffi::GtkDropDown,
             _param_spec: glib::ffi::gpointer,
@@ -280,10 +277,7 @@ impl DropDown {
     }
 
     #[doc(alias = "selected-item")]
-    pub fn connect_selected_item_notify<F: Fn(&DropDown) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_selected_item_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_selected_item_trampoline<F: Fn(&DropDown) + 'static>(
             this: *mut ffi::GtkDropDown,
             _param_spec: glib::ffi::gpointer,
@@ -481,17 +475,17 @@ impl DropDownBuilder {
         self
     }
 
-    pub fn factory<P: IsA<ListItemFactory>>(mut self, factory: &P) -> Self {
+    pub fn factory(mut self, factory: &impl IsA<ListItemFactory>) -> Self {
         self.factory = Some(factory.clone().upcast());
         self
     }
 
-    pub fn list_factory<P: IsA<ListItemFactory>>(mut self, list_factory: &P) -> Self {
+    pub fn list_factory(mut self, list_factory: &impl IsA<ListItemFactory>) -> Self {
         self.list_factory = Some(list_factory.clone().upcast());
         self
     }
 
-    pub fn model<P: IsA<gio::ListModel>>(mut self, model: &P) -> Self {
+    pub fn model(mut self, model: &impl IsA<gio::ListModel>) -> Self {
         self.model = Some(model.clone().upcast());
         self
     }
@@ -561,7 +555,7 @@ impl DropDownBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }

@@ -304,7 +304,7 @@ impl GridBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }
@@ -404,13 +404,13 @@ pub const NONE_GRID: Option<&Grid> = None;
 
 pub trait GridExt: 'static {
     #[doc(alias = "gtk_grid_attach")]
-    fn attach<P: IsA<Widget>>(&self, child: &P, column: i32, row: i32, width: i32, height: i32);
+    fn attach(&self, child: &impl IsA<Widget>, column: i32, row: i32, width: i32, height: i32);
 
     #[doc(alias = "gtk_grid_attach_next_to")]
-    fn attach_next_to<P: IsA<Widget>, Q: IsA<Widget>>(
+    fn attach_next_to(
         &self,
-        child: &P,
-        sibling: Option<&Q>,
+        child: &impl IsA<Widget>,
+        sibling: Option<&impl IsA<Widget>>,
         side: PositionType,
         width: i32,
         height: i32,
@@ -448,16 +448,16 @@ pub trait GridExt: 'static {
     fn insert_column(&self, position: i32);
 
     #[doc(alias = "gtk_grid_insert_next_to")]
-    fn insert_next_to<P: IsA<Widget>>(&self, sibling: &P, side: PositionType);
+    fn insert_next_to(&self, sibling: &impl IsA<Widget>, side: PositionType);
 
     #[doc(alias = "gtk_grid_insert_row")]
     fn insert_row(&self, position: i32);
 
     #[doc(alias = "gtk_grid_query_child")]
-    fn query_child<P: IsA<Widget>>(&self, child: &P) -> (i32, i32, i32, i32);
+    fn query_child(&self, child: &impl IsA<Widget>) -> (i32, i32, i32, i32);
 
     #[doc(alias = "gtk_grid_remove")]
-    fn remove<P: IsA<Widget>>(&self, child: &P);
+    fn remove(&self, child: &impl IsA<Widget>);
 
     #[doc(alias = "gtk_grid_remove_column")]
     fn remove_column(&self, position: i32);
@@ -500,7 +500,7 @@ pub trait GridExt: 'static {
 }
 
 impl<O: IsA<Grid>> GridExt for O {
-    fn attach<P: IsA<Widget>>(&self, child: &P, column: i32, row: i32, width: i32, height: i32) {
+    fn attach(&self, child: &impl IsA<Widget>, column: i32, row: i32, width: i32, height: i32) {
         unsafe {
             ffi::gtk_grid_attach(
                 self.as_ref().to_glib_none().0,
@@ -513,10 +513,10 @@ impl<O: IsA<Grid>> GridExt for O {
         }
     }
 
-    fn attach_next_to<P: IsA<Widget>, Q: IsA<Widget>>(
+    fn attach_next_to(
         &self,
-        child: &P,
-        sibling: Option<&Q>,
+        child: &impl IsA<Widget>,
+        sibling: Option<&impl IsA<Widget>>,
         side: PositionType,
         width: i32,
         height: i32,
@@ -586,7 +586,7 @@ impl<O: IsA<Grid>> GridExt for O {
         }
     }
 
-    fn insert_next_to<P: IsA<Widget>>(&self, sibling: &P, side: PositionType) {
+    fn insert_next_to(&self, sibling: &impl IsA<Widget>, side: PositionType) {
         unsafe {
             ffi::gtk_grid_insert_next_to(
                 self.as_ref().to_glib_none().0,
@@ -602,7 +602,7 @@ impl<O: IsA<Grid>> GridExt for O {
         }
     }
 
-    fn query_child<P: IsA<Widget>>(&self, child: &P) -> (i32, i32, i32, i32) {
+    fn query_child(&self, child: &impl IsA<Widget>) -> (i32, i32, i32, i32) {
         unsafe {
             let mut column = mem::MaybeUninit::uninit();
             let mut row = mem::MaybeUninit::uninit();
@@ -624,7 +624,7 @@ impl<O: IsA<Grid>> GridExt for O {
         }
     }
 
-    fn remove<P: IsA<Widget>>(&self, child: &P) {
+    fn remove(&self, child: &impl IsA<Widget>) {
         unsafe {
             ffi::gtk_grid_remove(
                 self.as_ref().to_glib_none().0,
@@ -693,13 +693,11 @@ impl<O: IsA<Grid>> GridExt for O {
 
     #[doc(alias = "baseline-row")]
     fn connect_baseline_row_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_baseline_row_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_baseline_row_trampoline<P: IsA<Grid>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkGrid,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Grid>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Grid::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -718,13 +716,14 @@ impl<O: IsA<Grid>> GridExt for O {
 
     #[doc(alias = "column-homogeneous")]
     fn connect_column_homogeneous_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_column_homogeneous_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_column_homogeneous_trampoline<
+            P: IsA<Grid>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkGrid,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Grid>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Grid::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -743,13 +742,11 @@ impl<O: IsA<Grid>> GridExt for O {
 
     #[doc(alias = "column-spacing")]
     fn connect_column_spacing_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_column_spacing_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_column_spacing_trampoline<P: IsA<Grid>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkGrid,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Grid>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Grid::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -768,13 +765,14 @@ impl<O: IsA<Grid>> GridExt for O {
 
     #[doc(alias = "row-homogeneous")]
     fn connect_row_homogeneous_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_row_homogeneous_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_row_homogeneous_trampoline<
+            P: IsA<Grid>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkGrid,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Grid>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Grid::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -793,13 +791,11 @@ impl<O: IsA<Grid>> GridExt for O {
 
     #[doc(alias = "row-spacing")]
     fn connect_row_spacing_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_row_spacing_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_row_spacing_trampoline<P: IsA<Grid>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkGrid,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Grid>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Grid::from_glib_borrow(this).unsafe_cast_ref())
         }

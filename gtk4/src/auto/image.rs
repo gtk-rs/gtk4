@@ -41,7 +41,7 @@ impl Image {
 
     #[doc(alias = "gtk_image_new_from_file")]
     #[doc(alias = "new_from_file")]
-    pub fn from_file<P: AsRef<std::path::Path>>(filename: P) -> Image {
+    pub fn from_file(filename: impl AsRef<std::path::Path>) -> Image {
         assert_initialized_main_thread!();
         unsafe {
             Widget::from_glib_none(ffi::gtk_image_new_from_file(
@@ -53,7 +53,7 @@ impl Image {
 
     #[doc(alias = "gtk_image_new_from_gicon")]
     #[doc(alias = "new_from_gicon")]
-    pub fn from_gicon<P: IsA<gio::Icon>>(icon: &P) -> Image {
+    pub fn from_gicon(icon: &impl IsA<gio::Icon>) -> Image {
         assert_initialized_main_thread!();
         unsafe {
             Widget::from_glib_none(ffi::gtk_image_new_from_gicon(
@@ -77,7 +77,7 @@ impl Image {
 
     #[doc(alias = "gtk_image_new_from_paintable")]
     #[doc(alias = "new_from_paintable")]
-    pub fn from_paintable<P: IsA<gdk::Paintable>>(paintable: Option<&P>) -> Image {
+    pub fn from_paintable(paintable: Option<&impl IsA<gdk::Paintable>>) -> Image {
         assert_initialized_main_thread!();
         unsafe {
             Widget::from_glib_none(ffi::gtk_image_new_from_paintable(
@@ -160,14 +160,14 @@ impl Image {
     }
 
     #[doc(alias = "gtk_image_set_from_file")]
-    pub fn set_from_file<P: AsRef<std::path::Path>>(&self, filename: P) {
+    pub fn set_from_file(&self, filename: impl AsRef<std::path::Path>) {
         unsafe {
             ffi::gtk_image_set_from_file(self.to_glib_none().0, filename.as_ref().to_glib_none().0);
         }
     }
 
     #[doc(alias = "gtk_image_set_from_gicon")]
-    pub fn set_from_gicon<P: IsA<gio::Icon>>(&self, icon: &P) {
+    pub fn set_from_gicon(&self, icon: &impl IsA<gio::Icon>) {
         unsafe {
             ffi::gtk_image_set_from_gicon(self.to_glib_none().0, icon.as_ref().to_glib_none().0);
         }
@@ -181,7 +181,7 @@ impl Image {
     }
 
     #[doc(alias = "gtk_image_set_from_paintable")]
-    pub fn set_from_paintable<P: IsA<gdk::Paintable>>(&self, paintable: Option<&P>) {
+    pub fn set_from_paintable(&self, paintable: Option<&impl IsA<gdk::Paintable>>) {
         unsafe {
             ffi::gtk_image_set_from_paintable(
                 self.to_glib_none().0,
@@ -324,7 +324,7 @@ impl Image {
     }
 
     #[doc(alias = "file")]
-    pub fn connect_file_notify<F: Fn(&Image) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_file_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_file_trampoline<F: Fn(&Image) + 'static>(
             this: *mut ffi::GtkImage,
             _param_spec: glib::ffi::gpointer,
@@ -347,7 +347,7 @@ impl Image {
     }
 
     #[doc(alias = "gicon")]
-    pub fn connect_gicon_notify<F: Fn(&Image) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_gicon_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_gicon_trampoline<F: Fn(&Image) + 'static>(
             this: *mut ffi::GtkImage,
             _param_spec: glib::ffi::gpointer,
@@ -370,7 +370,7 @@ impl Image {
     }
 
     #[doc(alias = "icon-name")]
-    pub fn connect_icon_name_notify<F: Fn(&Image) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_icon_name_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_icon_name_trampoline<F: Fn(&Image) + 'static>(
             this: *mut ffi::GtkImage,
             _param_spec: glib::ffi::gpointer,
@@ -393,7 +393,7 @@ impl Image {
     }
 
     #[doc(alias = "icon-size")]
-    pub fn connect_icon_size_notify<F: Fn(&Image) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_icon_size_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_icon_size_trampoline<F: Fn(&Image) + 'static>(
             this: *mut ffi::GtkImage,
             _param_spec: glib::ffi::gpointer,
@@ -416,7 +416,7 @@ impl Image {
     }
 
     #[doc(alias = "paintable")]
-    pub fn connect_paintable_notify<F: Fn(&Image) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_paintable_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_paintable_trampoline<F: Fn(&Image) + 'static>(
             this: *mut ffi::GtkImage,
             _param_spec: glib::ffi::gpointer,
@@ -439,7 +439,7 @@ impl Image {
     }
 
     #[doc(alias = "pixel-size")]
-    pub fn connect_pixel_size_notify<F: Fn(&Image) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_pixel_size_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_pixel_size_trampoline<F: Fn(&Image) + 'static>(
             this: *mut ffi::GtkImage,
             _param_spec: glib::ffi::gpointer,
@@ -462,7 +462,7 @@ impl Image {
     }
 
     #[doc(alias = "resource")]
-    pub fn connect_resource_notify<F: Fn(&Image) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_resource_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_resource_trampoline<F: Fn(&Image) + 'static>(
             this: *mut ffi::GtkImage,
             _param_spec: glib::ffi::gpointer,
@@ -485,7 +485,7 @@ impl Image {
     }
 
     #[doc(alias = "storage-type")]
-    pub fn connect_storage_type_notify<F: Fn(&Image) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_storage_type_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_storage_type_trampoline<F: Fn(&Image) + 'static>(
             this: *mut ffi::GtkImage,
             _param_spec: glib::ffi::gpointer,
@@ -508,7 +508,7 @@ impl Image {
     }
 
     #[doc(alias = "use-fallback")]
-    pub fn connect_use_fallback_notify<F: Fn(&Image) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_use_fallback_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_use_fallback_trampoline<F: Fn(&Image) + 'static>(
             this: *mut ffi::GtkImage,
             _param_spec: glib::ffi::gpointer,
@@ -714,7 +714,7 @@ impl ImageBuilder {
         self
     }
 
-    pub fn gicon<P: IsA<gio::Icon>>(mut self, gicon: &P) -> Self {
+    pub fn gicon(mut self, gicon: &impl IsA<gio::Icon>) -> Self {
         self.gicon = Some(gicon.clone().upcast());
         self
     }
@@ -729,7 +729,7 @@ impl ImageBuilder {
         self
     }
 
-    pub fn paintable<P: IsA<gdk::Paintable>>(mut self, paintable: &P) -> Self {
+    pub fn paintable(mut self, paintable: &impl IsA<gdk::Paintable>) -> Self {
         self.paintable = Some(paintable.clone().upcast());
         self
     }
@@ -809,7 +809,7 @@ impl ImageBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }

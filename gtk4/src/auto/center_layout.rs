@@ -83,7 +83,7 @@ impl CenterLayout {
     }
 
     #[doc(alias = "gtk_center_layout_set_center_widget")]
-    pub fn set_center_widget<P: IsA<Widget>>(&self, widget: Option<&P>) {
+    pub fn set_center_widget(&self, widget: Option<&impl IsA<Widget>>) {
         unsafe {
             ffi::gtk_center_layout_set_center_widget(
                 self.to_glib_none().0,
@@ -93,7 +93,7 @@ impl CenterLayout {
     }
 
     #[doc(alias = "gtk_center_layout_set_end_widget")]
-    pub fn set_end_widget<P: IsA<Widget>>(&self, widget: Option<&P>) {
+    pub fn set_end_widget(&self, widget: Option<&impl IsA<Widget>>) {
         unsafe {
             ffi::gtk_center_layout_set_end_widget(
                 self.to_glib_none().0,
@@ -110,7 +110,7 @@ impl CenterLayout {
     }
 
     #[doc(alias = "gtk_center_layout_set_start_widget")]
-    pub fn set_start_widget<P: IsA<Widget>>(&self, widget: Option<&P>) {
+    pub fn set_start_widget(&self, widget: Option<&impl IsA<Widget>>) {
         unsafe {
             ffi::gtk_center_layout_set_start_widget(
                 self.to_glib_none().0,

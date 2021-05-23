@@ -86,10 +86,7 @@ impl GridLayoutChild {
     }
 
     #[doc(alias = "column")]
-    pub fn connect_column_notify<F: Fn(&GridLayoutChild) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_column_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_column_trampoline<F: Fn(&GridLayoutChild) + 'static>(
             this: *mut ffi::GtkGridLayoutChild,
             _param_spec: glib::ffi::gpointer,
@@ -112,10 +109,7 @@ impl GridLayoutChild {
     }
 
     #[doc(alias = "column-span")]
-    pub fn connect_column_span_notify<F: Fn(&GridLayoutChild) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_column_span_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_column_span_trampoline<F: Fn(&GridLayoutChild) + 'static>(
             this: *mut ffi::GtkGridLayoutChild,
             _param_spec: glib::ffi::gpointer,
@@ -138,7 +132,7 @@ impl GridLayoutChild {
     }
 
     #[doc(alias = "row")]
-    pub fn connect_row_notify<F: Fn(&GridLayoutChild) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_row_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_row_trampoline<F: Fn(&GridLayoutChild) + 'static>(
             this: *mut ffi::GtkGridLayoutChild,
             _param_spec: glib::ffi::gpointer,
@@ -161,10 +155,7 @@ impl GridLayoutChild {
     }
 
     #[doc(alias = "row-span")]
-    pub fn connect_row_span_notify<F: Fn(&GridLayoutChild) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_row_span_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_row_span_trampoline<F: Fn(&GridLayoutChild) + 'static>(
             this: *mut ffi::GtkGridLayoutChild,
             _param_spec: glib::ffi::gpointer,
@@ -252,12 +243,12 @@ impl GridLayoutChildBuilder {
         self
     }
 
-    pub fn child_widget<P: IsA<Widget>>(mut self, child_widget: &P) -> Self {
+    pub fn child_widget(mut self, child_widget: &impl IsA<Widget>) -> Self {
         self.child_widget = Some(child_widget.clone().upcast());
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }

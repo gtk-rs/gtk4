@@ -25,9 +25,9 @@ glib::wrapper! {
 
 impl FilterListModel {
     #[doc(alias = "gtk_filter_list_model_new")]
-    pub fn new<P: IsA<gio::ListModel>, Q: IsA<Filter>>(
-        model: Option<&P>,
-        filter: Option<&Q>,
+    pub fn new(
+        model: Option<&impl IsA<gio::ListModel>>,
+        filter: Option<&impl IsA<Filter>>,
     ) -> FilterListModel {
         assert_initialized_main_thread!();
         unsafe {
@@ -74,7 +74,7 @@ impl FilterListModel {
     }
 
     #[doc(alias = "gtk_filter_list_model_set_filter")]
-    pub fn set_filter<P: IsA<Filter>>(&self, filter: Option<&P>) {
+    pub fn set_filter(&self, filter: Option<&impl IsA<Filter>>) {
         unsafe {
             ffi::gtk_filter_list_model_set_filter(
                 self.to_glib_none().0,
@@ -94,7 +94,7 @@ impl FilterListModel {
     }
 
     #[doc(alias = "gtk_filter_list_model_set_model")]
-    pub fn set_model<P: IsA<gio::ListModel>>(&self, model: Option<&P>) {
+    pub fn set_model(&self, model: Option<&impl IsA<gio::ListModel>>) {
         unsafe {
             ffi::gtk_filter_list_model_set_model(
                 self.to_glib_none().0,
@@ -104,10 +104,7 @@ impl FilterListModel {
     }
 
     #[doc(alias = "filter")]
-    pub fn connect_filter_notify<F: Fn(&FilterListModel) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_filter_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_filter_trampoline<F: Fn(&FilterListModel) + 'static>(
             this: *mut ffi::GtkFilterListModel,
             _param_spec: glib::ffi::gpointer,
@@ -130,10 +127,7 @@ impl FilterListModel {
     }
 
     #[doc(alias = "incremental")]
-    pub fn connect_incremental_notify<F: Fn(&FilterListModel) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_incremental_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_incremental_trampoline<F: Fn(&FilterListModel) + 'static>(
             this: *mut ffi::GtkFilterListModel,
             _param_spec: glib::ffi::gpointer,
@@ -156,7 +150,7 @@ impl FilterListModel {
     }
 
     #[doc(alias = "model")]
-    pub fn connect_model_notify<F: Fn(&FilterListModel) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_model_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_model_trampoline<F: Fn(&FilterListModel) + 'static>(
             this: *mut ffi::GtkFilterListModel,
             _param_spec: glib::ffi::gpointer,
@@ -179,10 +173,7 @@ impl FilterListModel {
     }
 
     #[doc(alias = "pending")]
-    pub fn connect_pending_notify<F: Fn(&FilterListModel) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_pending_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_pending_trampoline<F: Fn(&FilterListModel) + 'static>(
             this: *mut ffi::GtkFilterListModel,
             _param_spec: glib::ffi::gpointer,
@@ -238,7 +229,7 @@ impl FilterListModelBuilder {
             .expect("Failed to create an instance of FilterListModel")
     }
 
-    pub fn filter<P: IsA<Filter>>(mut self, filter: &P) -> Self {
+    pub fn filter(mut self, filter: &impl IsA<Filter>) -> Self {
         self.filter = Some(filter.clone().upcast());
         self
     }
@@ -248,7 +239,7 @@ impl FilterListModelBuilder {
         self
     }
 
-    pub fn model<P: IsA<gio::ListModel>>(mut self, model: &P) -> Self {
+    pub fn model(mut self, model: &impl IsA<gio::ListModel>) -> Self {
         self.model = Some(model.clone().upcast());
         self
     }

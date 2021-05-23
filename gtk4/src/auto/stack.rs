@@ -48,7 +48,7 @@ impl Stack {
     }
 
     #[doc(alias = "gtk_stack_add_child")]
-    pub fn add_child<P: IsA<Widget>>(&self, child: &P) -> StackPage {
+    pub fn add_child(&self, child: &impl IsA<Widget>) -> StackPage {
         unsafe {
             from_glib_none(ffi::gtk_stack_add_child(
                 self.to_glib_none().0,
@@ -58,7 +58,7 @@ impl Stack {
     }
 
     #[doc(alias = "gtk_stack_add_named")]
-    pub fn add_named<P: IsA<Widget>>(&self, child: &P, name: Option<&str>) -> StackPage {
+    pub fn add_named(&self, child: &impl IsA<Widget>, name: Option<&str>) -> StackPage {
         unsafe {
             from_glib_none(ffi::gtk_stack_add_named(
                 self.to_glib_none().0,
@@ -69,9 +69,9 @@ impl Stack {
     }
 
     #[doc(alias = "gtk_stack_add_titled")]
-    pub fn add_titled<P: IsA<Widget>>(
+    pub fn add_titled(
         &self,
-        child: &P,
+        child: &impl IsA<Widget>,
         name: Option<&str>,
         title: &str,
     ) -> StackPage {
@@ -110,7 +110,7 @@ impl Stack {
 
     #[doc(alias = "gtk_stack_get_page")]
     #[doc(alias = "get_page")]
-    pub fn page<P: IsA<Widget>>(&self, child: &P) -> Option<StackPage> {
+    pub fn page(&self, child: &impl IsA<Widget>) -> Option<StackPage> {
         unsafe {
             from_glib_none(ffi::gtk_stack_get_page(
                 self.to_glib_none().0,
@@ -162,7 +162,7 @@ impl Stack {
     }
 
     #[doc(alias = "gtk_stack_remove")]
-    pub fn remove<P: IsA<Widget>>(&self, child: &P) {
+    pub fn remove(&self, child: &impl IsA<Widget>) {
         unsafe {
             ffi::gtk_stack_remove(self.to_glib_none().0, child.as_ref().to_glib_none().0);
         }
@@ -207,7 +207,7 @@ impl Stack {
     }
 
     #[doc(alias = "gtk_stack_set_visible_child")]
-    pub fn set_visible_child<P: IsA<Widget>>(&self, child: &P) {
+    pub fn set_visible_child(&self, child: &impl IsA<Widget>) {
         unsafe {
             ffi::gtk_stack_set_visible_child(
                 self.to_glib_none().0,
@@ -235,7 +235,7 @@ impl Stack {
     }
 
     #[doc(alias = "hhomogeneous")]
-    pub fn connect_hhomogeneous_notify<F: Fn(&Stack) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_hhomogeneous_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_hhomogeneous_trampoline<F: Fn(&Stack) + 'static>(
             this: *mut ffi::GtkStack,
             _param_spec: glib::ffi::gpointer,
@@ -258,10 +258,7 @@ impl Stack {
     }
 
     #[doc(alias = "interpolate-size")]
-    pub fn connect_interpolate_size_notify<F: Fn(&Stack) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_interpolate_size_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_interpolate_size_trampoline<F: Fn(&Stack) + 'static>(
             this: *mut ffi::GtkStack,
             _param_spec: glib::ffi::gpointer,
@@ -284,7 +281,7 @@ impl Stack {
     }
 
     #[doc(alias = "pages")]
-    pub fn connect_pages_notify<F: Fn(&Stack) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_pages_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_pages_trampoline<F: Fn(&Stack) + 'static>(
             this: *mut ffi::GtkStack,
             _param_spec: glib::ffi::gpointer,
@@ -307,7 +304,7 @@ impl Stack {
     }
 
     #[doc(alias = "transition-duration")]
-    pub fn connect_transition_duration_notify<F: Fn(&Stack) + 'static>(
+    pub fn connect_transition_duration_notify<F: Fn(&Self) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -333,7 +330,7 @@ impl Stack {
     }
 
     #[doc(alias = "transition-running")]
-    pub fn connect_transition_running_notify<F: Fn(&Stack) + 'static>(
+    pub fn connect_transition_running_notify<F: Fn(&Self) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -359,7 +356,7 @@ impl Stack {
     }
 
     #[doc(alias = "transition-type")]
-    pub fn connect_transition_type_notify<F: Fn(&Stack) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_transition_type_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_transition_type_trampoline<F: Fn(&Stack) + 'static>(
             this: *mut ffi::GtkStack,
             _param_spec: glib::ffi::gpointer,
@@ -382,7 +379,7 @@ impl Stack {
     }
 
     #[doc(alias = "vhomogeneous")]
-    pub fn connect_vhomogeneous_notify<F: Fn(&Stack) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_vhomogeneous_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_vhomogeneous_trampoline<F: Fn(&Stack) + 'static>(
             this: *mut ffi::GtkStack,
             _param_spec: glib::ffi::gpointer,
@@ -405,7 +402,7 @@ impl Stack {
     }
 
     #[doc(alias = "visible-child")]
-    pub fn connect_visible_child_notify<F: Fn(&Stack) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_visible_child_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_visible_child_trampoline<F: Fn(&Stack) + 'static>(
             this: *mut ffi::GtkStack,
             _param_spec: glib::ffi::gpointer,
@@ -428,7 +425,7 @@ impl Stack {
     }
 
     #[doc(alias = "visible-child-name")]
-    pub fn connect_visible_child_name_notify<F: Fn(&Stack) + 'static>(
+    pub fn connect_visible_child_name_notify<F: Fn(&Self) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -653,7 +650,7 @@ impl StackBuilder {
         self
     }
 
-    pub fn visible_child<P: IsA<Widget>>(mut self, visible_child: &P) -> Self {
+    pub fn visible_child(mut self, visible_child: &impl IsA<Widget>) -> Self {
         self.visible_child = Some(visible_child.clone().upcast());
         self
     }
@@ -723,7 +720,7 @@ impl StackBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }

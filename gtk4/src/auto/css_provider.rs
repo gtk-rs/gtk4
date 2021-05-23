@@ -41,7 +41,7 @@ impl CssProvider {
     }
 
     #[doc(alias = "gtk_css_provider_load_from_file")]
-    pub fn load_from_file<P: IsA<gio::File>>(&self, file: &P) {
+    pub fn load_from_file(&self, file: &impl IsA<gio::File>) {
         unsafe {
             ffi::gtk_css_provider_load_from_file(
                 self.to_glib_none().0,
@@ -85,7 +85,7 @@ impl CssProvider {
     }
 
     #[doc(alias = "parsing-error")]
-    pub fn connect_parsing_error<F: Fn(&CssProvider, &CssSection, &glib::Error) + 'static>(
+    pub fn connect_parsing_error<F: Fn(&Self, &CssSection, &glib::Error) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {

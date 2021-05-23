@@ -67,7 +67,7 @@ impl PasswordEntry {
     }
 
     #[doc(alias = "gtk_password_entry_set_extra_menu")]
-    pub fn set_extra_menu<P: IsA<gio::MenuModel>>(&self, model: Option<&P>) {
+    pub fn set_extra_menu(&self, model: Option<&impl IsA<gio::MenuModel>>) {
         unsafe {
             ffi::gtk_password_entry_set_extra_menu(
                 self.to_glib_none().0,
@@ -139,7 +139,7 @@ impl PasswordEntry {
     }
 
     #[doc(alias = "activate")]
-    pub fn connect_activate<F: Fn(&PasswordEntry) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_activate<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn activate_trampoline<F: Fn(&PasswordEntry) + 'static>(
             this: *mut ffi::GtkPasswordEntry,
             f: glib::ffi::gpointer,
@@ -169,7 +169,7 @@ impl PasswordEntry {
     }
 
     #[doc(alias = "activates-default")]
-    pub fn connect_activates_default_notify<F: Fn(&PasswordEntry) + 'static>(
+    pub fn connect_activates_default_notify<F: Fn(&Self) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -197,10 +197,7 @@ impl PasswordEntry {
     }
 
     #[doc(alias = "extra-menu")]
-    pub fn connect_extra_menu_notify<F: Fn(&PasswordEntry) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_extra_menu_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_extra_menu_trampoline<F: Fn(&PasswordEntry) + 'static>(
             this: *mut ffi::GtkPasswordEntry,
             _param_spec: glib::ffi::gpointer,
@@ -223,10 +220,7 @@ impl PasswordEntry {
     }
 
     #[doc(alias = "placeholder-text")]
-    pub fn connect_placeholder_text_notify<F: Fn(&PasswordEntry) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_placeholder_text_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_placeholder_text_trampoline<F: Fn(&PasswordEntry) + 'static>(
             this: *mut ffi::GtkPasswordEntry,
             _param_spec: glib::ffi::gpointer,
@@ -249,10 +243,7 @@ impl PasswordEntry {
     }
 
     #[doc(alias = "show-peek-icon")]
-    pub fn connect_show_peek_icon_notify<F: Fn(&PasswordEntry) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_show_peek_icon_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_show_peek_icon_trampoline<F: Fn(&PasswordEntry) + 'static>(
             this: *mut ffi::GtkPasswordEntry,
             _param_spec: glib::ffi::gpointer,
@@ -467,7 +458,7 @@ impl PasswordEntryBuilder {
         self
     }
 
-    pub fn extra_menu<P: IsA<gio::MenuModel>>(mut self, extra_menu: &P) -> Self {
+    pub fn extra_menu(mut self, extra_menu: &impl IsA<gio::MenuModel>) -> Self {
         self.extra_menu = Some(extra_menu.clone().upcast());
         self
     }
@@ -542,7 +533,7 @@ impl PasswordEntryBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }

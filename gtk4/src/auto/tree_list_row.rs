@@ -89,7 +89,7 @@ impl TreeListRow {
     }
 
     #[doc(alias = "children")]
-    pub fn connect_children_notify<F: Fn(&TreeListRow) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_children_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_children_trampoline<F: Fn(&TreeListRow) + 'static>(
             this: *mut ffi::GtkTreeListRow,
             _param_spec: glib::ffi::gpointer,
@@ -112,7 +112,7 @@ impl TreeListRow {
     }
 
     #[doc(alias = "depth")]
-    pub fn connect_depth_notify<F: Fn(&TreeListRow) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_depth_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_depth_trampoline<F: Fn(&TreeListRow) + 'static>(
             this: *mut ffi::GtkTreeListRow,
             _param_spec: glib::ffi::gpointer,
@@ -135,10 +135,7 @@ impl TreeListRow {
     }
 
     #[doc(alias = "expandable")]
-    pub fn connect_expandable_notify<F: Fn(&TreeListRow) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_expandable_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_expandable_trampoline<F: Fn(&TreeListRow) + 'static>(
             this: *mut ffi::GtkTreeListRow,
             _param_spec: glib::ffi::gpointer,
@@ -161,7 +158,7 @@ impl TreeListRow {
     }
 
     #[doc(alias = "expanded")]
-    pub fn connect_expanded_notify<F: Fn(&TreeListRow) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_expanded_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_expanded_trampoline<F: Fn(&TreeListRow) + 'static>(
             this: *mut ffi::GtkTreeListRow,
             _param_spec: glib::ffi::gpointer,
@@ -184,7 +181,7 @@ impl TreeListRow {
     }
 
     #[doc(alias = "item")]
-    pub fn connect_item_notify<F: Fn(&TreeListRow) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_item_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_item_trampoline<F: Fn(&TreeListRow) + 'static>(
             this: *mut ffi::GtkTreeListRow,
             _param_spec: glib::ffi::gpointer,

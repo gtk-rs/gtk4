@@ -29,9 +29,9 @@ glib::wrapper! {
 
 impl FileChooserNative {
     #[doc(alias = "gtk_file_chooser_native_new")]
-    pub fn new<P: IsA<Window>>(
+    pub fn new(
         title: Option<&str>,
-        parent: Option<&P>,
+        parent: Option<&impl IsA<Window>>,
         action: FileChooserAction,
         accept_label: Option<&str>,
         cancel_label: Option<&str>,
@@ -96,10 +96,7 @@ impl FileChooserNative {
     }
 
     #[doc(alias = "accept-label")]
-    pub fn connect_accept_label_notify<F: Fn(&FileChooserNative) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_accept_label_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_accept_label_trampoline<F: Fn(&FileChooserNative) + 'static>(
             this: *mut ffi::GtkFileChooserNative,
             _param_spec: glib::ffi::gpointer,
@@ -122,10 +119,7 @@ impl FileChooserNative {
     }
 
     #[doc(alias = "cancel-label")]
-    pub fn connect_cancel_label_notify<F: Fn(&FileChooserNative) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_cancel_label_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_cancel_label_trampoline<F: Fn(&FileChooserNative) + 'static>(
             this: *mut ffi::GtkFileChooserNative,
             _param_spec: glib::ffi::gpointer,
@@ -229,7 +223,7 @@ impl FileChooserNativeBuilder {
         self
     }
 
-    pub fn transient_for<P: IsA<Window>>(mut self, transient_for: &P) -> Self {
+    pub fn transient_for(mut self, transient_for: &impl IsA<Window>) -> Self {
         self.transient_for = Some(transient_for.clone().upcast());
         self
     }

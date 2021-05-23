@@ -72,10 +72,7 @@ impl ColorChooserWidget {
     }
 
     #[doc(alias = "show-editor")]
-    pub fn connect_show_editor_notify<F: Fn(&ColorChooserWidget) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_show_editor_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_show_editor_trampoline<F: Fn(&ColorChooserWidget) + 'static>(
             this: *mut ffi::GtkColorChooserWidget,
             _param_spec: glib::ffi::gpointer,
@@ -322,7 +319,7 @@ impl ColorChooserWidgetBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }

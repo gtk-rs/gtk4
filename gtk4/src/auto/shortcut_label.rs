@@ -88,10 +88,7 @@ impl ShortcutLabel {
     }
 
     #[doc(alias = "accelerator")]
-    pub fn connect_accelerator_notify<F: Fn(&ShortcutLabel) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_accelerator_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_accelerator_trampoline<F: Fn(&ShortcutLabel) + 'static>(
             this: *mut ffi::GtkShortcutLabel,
             _param_spec: glib::ffi::gpointer,
@@ -114,10 +111,7 @@ impl ShortcutLabel {
     }
 
     #[doc(alias = "disabled-text")]
-    pub fn connect_disabled_text_notify<F: Fn(&ShortcutLabel) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_disabled_text_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_disabled_text_trampoline<F: Fn(&ShortcutLabel) + 'static>(
             this: *mut ffi::GtkShortcutLabel,
             _param_spec: glib::ffi::gpointer,
@@ -359,7 +353,7 @@ impl ShortcutLabelBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }

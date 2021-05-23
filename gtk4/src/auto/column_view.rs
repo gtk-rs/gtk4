@@ -39,7 +39,7 @@ glib::wrapper! {
 
 impl ColumnView {
     #[doc(alias = "gtk_column_view_new")]
-    pub fn new<P: IsA<SelectionModel>>(model: Option<&P>) -> ColumnView {
+    pub fn new(model: Option<&impl IsA<SelectionModel>>) -> ColumnView {
         assert_initialized_main_thread!();
         unsafe {
             Widget::from_glib_none(ffi::gtk_column_view_new(
@@ -156,7 +156,7 @@ impl ColumnView {
     }
 
     #[doc(alias = "gtk_column_view_set_model")]
-    pub fn set_model<P: IsA<SelectionModel>>(&self, model: Option<&P>) {
+    pub fn set_model(&self, model: Option<&impl IsA<SelectionModel>>) {
         unsafe {
             ffi::gtk_column_view_set_model(
                 self.to_glib_none().0,
@@ -214,7 +214,7 @@ impl ColumnView {
     }
 
     #[doc(alias = "activate")]
-    pub fn connect_activate<F: Fn(&ColumnView, u32) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_activate<F: Fn(&Self, u32) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn activate_trampoline<F: Fn(&ColumnView, u32) + 'static>(
             this: *mut ffi::GtkColumnView,
             position: libc::c_uint,
@@ -237,7 +237,7 @@ impl ColumnView {
     }
 
     #[doc(alias = "columns")]
-    pub fn connect_columns_notify<F: Fn(&ColumnView) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_columns_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_columns_trampoline<F: Fn(&ColumnView) + 'static>(
             this: *mut ffi::GtkColumnView,
             _param_spec: glib::ffi::gpointer,
@@ -260,7 +260,7 @@ impl ColumnView {
     }
 
     #[doc(alias = "enable-rubberband")]
-    pub fn connect_enable_rubberband_notify<F: Fn(&ColumnView) + 'static>(
+    pub fn connect_enable_rubberband_notify<F: Fn(&Self) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -286,7 +286,7 @@ impl ColumnView {
     }
 
     #[doc(alias = "model")]
-    pub fn connect_model_notify<F: Fn(&ColumnView) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_model_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_model_trampoline<F: Fn(&ColumnView) + 'static>(
             this: *mut ffi::GtkColumnView,
             _param_spec: glib::ffi::gpointer,
@@ -309,10 +309,7 @@ impl ColumnView {
     }
 
     #[doc(alias = "reorderable")]
-    pub fn connect_reorderable_notify<F: Fn(&ColumnView) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_reorderable_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_reorderable_trampoline<F: Fn(&ColumnView) + 'static>(
             this: *mut ffi::GtkColumnView,
             _param_spec: glib::ffi::gpointer,
@@ -335,7 +332,7 @@ impl ColumnView {
     }
 
     #[doc(alias = "show-column-separators")]
-    pub fn connect_show_column_separators_notify<F: Fn(&ColumnView) + 'static>(
+    pub fn connect_show_column_separators_notify<F: Fn(&Self) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -363,7 +360,7 @@ impl ColumnView {
     }
 
     #[doc(alias = "show-row-separators")]
-    pub fn connect_show_row_separators_notify<F: Fn(&ColumnView) + 'static>(
+    pub fn connect_show_row_separators_notify<F: Fn(&Self) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -389,7 +386,7 @@ impl ColumnView {
     }
 
     #[doc(alias = "single-click-activate")]
-    pub fn connect_single_click_activate_notify<F: Fn(&ColumnView) + 'static>(
+    pub fn connect_single_click_activate_notify<F: Fn(&Self) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -417,7 +414,7 @@ impl ColumnView {
     }
 
     #[doc(alias = "sorter")]
-    pub fn connect_sorter_notify<F: Fn(&ColumnView) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_sorter_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_sorter_trampoline<F: Fn(&ColumnView) + 'static>(
             this: *mut ffi::GtkColumnView,
             _param_spec: glib::ffi::gpointer,
@@ -626,7 +623,7 @@ impl ColumnViewBuilder {
         self
     }
 
-    pub fn model<P: IsA<SelectionModel>>(mut self, model: &P) -> Self {
+    pub fn model(mut self, model: &impl IsA<SelectionModel>) -> Self {
         self.model = Some(model.clone().upcast());
         self
     }
@@ -711,7 +708,7 @@ impl ColumnViewBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }
@@ -801,7 +798,7 @@ impl ColumnViewBuilder {
         self
     }
 
-    pub fn hadjustment<P: IsA<Adjustment>>(mut self, hadjustment: &P) -> Self {
+    pub fn hadjustment(mut self, hadjustment: &impl IsA<Adjustment>) -> Self {
         self.hadjustment = Some(hadjustment.clone().upcast());
         self
     }
@@ -811,7 +808,7 @@ impl ColumnViewBuilder {
         self
     }
 
-    pub fn vadjustment<P: IsA<Adjustment>>(mut self, vadjustment: &P) -> Self {
+    pub fn vadjustment(mut self, vadjustment: &impl IsA<Adjustment>) -> Self {
         self.vadjustment = Some(vadjustment.clone().upcast());
         self
     }

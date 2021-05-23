@@ -52,7 +52,7 @@ impl ComboBox {
 
     #[doc(alias = "gtk_combo_box_new_with_model")]
     #[doc(alias = "new_with_model")]
-    pub fn with_model<P: IsA<TreeModel>>(model: &P) -> ComboBox {
+    pub fn with_model(model: &impl IsA<TreeModel>) -> ComboBox {
         skip_assert_initialized!();
         unsafe {
             Widget::from_glib_none(ffi::gtk_combo_box_new_with_model(
@@ -64,7 +64,7 @@ impl ComboBox {
 
     #[doc(alias = "gtk_combo_box_new_with_model_and_entry")]
     #[doc(alias = "new_with_model_and_entry")]
-    pub fn with_model_and_entry<P: IsA<TreeModel>>(model: &P) -> ComboBox {
+    pub fn with_model_and_entry(model: &impl IsA<TreeModel>) -> ComboBox {
         skip_assert_initialized!();
         unsafe {
             Widget::from_glib_none(ffi::gtk_combo_box_new_with_model_and_entry(
@@ -288,7 +288,7 @@ impl ComboBoxBuilder {
         self
     }
 
-    pub fn child<P: IsA<Widget>>(mut self, child: &P) -> Self {
+    pub fn child(mut self, child: &impl IsA<Widget>) -> Self {
         self.child = Some(child.clone().upcast());
         self
     }
@@ -313,7 +313,7 @@ impl ComboBoxBuilder {
         self
     }
 
-    pub fn model<P: IsA<TreeModel>>(mut self, model: &P) -> Self {
+    pub fn model(mut self, model: &impl IsA<TreeModel>) -> Self {
         self.model = Some(model.clone().upcast());
         self
     }
@@ -383,7 +383,7 @@ impl ComboBoxBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }
@@ -541,7 +541,7 @@ pub trait ComboBoxExt: 'static {
     fn set_button_sensitivity(&self, sensitivity: SensitivityType);
 
     #[doc(alias = "gtk_combo_box_set_child")]
-    fn set_child<P: IsA<Widget>>(&self, child: Option<&P>);
+    fn set_child(&self, child: Option<&impl IsA<Widget>>);
 
     #[doc(alias = "gtk_combo_box_set_entry_text_column")]
     fn set_entry_text_column(&self, text_column: i32);
@@ -550,7 +550,7 @@ pub trait ComboBoxExt: 'static {
     fn set_id_column(&self, id_column: i32);
 
     #[doc(alias = "gtk_combo_box_set_model")]
-    fn set_model<P: IsA<TreeModel>>(&self, model: Option<&P>);
+    fn set_model(&self, model: Option<&impl IsA<TreeModel>>);
 
     #[doc(alias = "gtk_combo_box_set_popup_fixed_width")]
     fn set_popup_fixed_width(&self, fixed: bool);
@@ -738,7 +738,7 @@ impl<O: IsA<ComboBox>> ComboBoxExt for O {
         }
     }
 
-    fn set_child<P: IsA<Widget>>(&self, child: Option<&P>) {
+    fn set_child(&self, child: Option<&impl IsA<Widget>>) {
         unsafe {
             ffi::gtk_combo_box_set_child(
                 self.as_ref().to_glib_none().0,
@@ -759,7 +759,7 @@ impl<O: IsA<ComboBox>> ComboBoxExt for O {
         }
     }
 
-    fn set_model<P: IsA<TreeModel>>(&self, model: Option<&P>) {
+    fn set_model(&self, model: Option<&impl IsA<TreeModel>>) {
         unsafe {
             ffi::gtk_combo_box_set_model(
                 self.as_ref().to_glib_none().0,
@@ -848,12 +848,10 @@ impl<O: IsA<ComboBox>> ComboBoxExt for O {
 
     #[doc(alias = "changed")]
     fn connect_changed<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn changed_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn changed_trampoline<P: IsA<ComboBox>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkComboBox,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<ComboBox>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&ComboBox::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -875,14 +873,14 @@ impl<O: IsA<ComboBox>> ComboBoxExt for O {
         &self,
         f: F,
     ) -> SignalHandlerId {
-        unsafe extern "C" fn format_entry_text_trampoline<P, F: Fn(&P, &str) -> String + 'static>(
+        unsafe extern "C" fn format_entry_text_trampoline<
+            P: IsA<ComboBox>,
+            F: Fn(&P, &str) -> String + 'static,
+        >(
             this: *mut ffi::GtkComboBox,
             path: *mut libc::c_char,
             f: glib::ffi::gpointer,
-        ) -> *mut libc::c_char
-        where
-            P: IsA<ComboBox>,
-        {
+        ) -> *mut libc::c_char {
             let f: &F = &*(f as *const F);
             f(
                 &ComboBox::from_glib_borrow(this).unsafe_cast_ref(),
@@ -905,13 +903,14 @@ impl<O: IsA<ComboBox>> ComboBoxExt for O {
 
     #[doc(alias = "move-active")]
     fn connect_move_active<F: Fn(&Self, ScrollType) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn move_active_trampoline<P, F: Fn(&P, ScrollType) + 'static>(
+        unsafe extern "C" fn move_active_trampoline<
+            P: IsA<ComboBox>,
+            F: Fn(&P, ScrollType) + 'static,
+        >(
             this: *mut ffi::GtkComboBox,
             scroll_type: ffi::GtkScrollType,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<ComboBox>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(
                 &ComboBox::from_glib_borrow(this).unsafe_cast_ref(),
@@ -941,13 +940,10 @@ impl<O: IsA<ComboBox>> ComboBoxExt for O {
 
     #[doc(alias = "popdown")]
     fn connect_popdown<F: Fn(&Self) -> bool + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn popdown_trampoline<P, F: Fn(&P) -> bool + 'static>(
+        unsafe extern "C" fn popdown_trampoline<P: IsA<ComboBox>, F: Fn(&P) -> bool + 'static>(
             this: *mut ffi::GtkComboBox,
             f: glib::ffi::gpointer,
-        ) -> glib::ffi::gboolean
-        where
-            P: IsA<ComboBox>,
-        {
+        ) -> glib::ffi::gboolean {
             let f: &F = &*(f as *const F);
             f(&ComboBox::from_glib_borrow(this).unsafe_cast_ref()).into_glib()
         }
@@ -975,12 +971,10 @@ impl<O: IsA<ComboBox>> ComboBoxExt for O {
 
     #[doc(alias = "popup")]
     fn connect_popup<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn popup_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn popup_trampoline<P: IsA<ComboBox>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkComboBox,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<ComboBox>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&ComboBox::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1007,13 +1001,11 @@ impl<O: IsA<ComboBox>> ComboBoxExt for O {
 
     #[doc(alias = "active")]
     fn connect_active_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_active_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_active_trampoline<P: IsA<ComboBox>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkComboBox,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<ComboBox>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&ComboBox::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1032,13 +1024,11 @@ impl<O: IsA<ComboBox>> ComboBoxExt for O {
 
     #[doc(alias = "active-id")]
     fn connect_active_id_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_active_id_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_active_id_trampoline<P: IsA<ComboBox>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkComboBox,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<ComboBox>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&ComboBox::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1057,13 +1047,14 @@ impl<O: IsA<ComboBox>> ComboBoxExt for O {
 
     #[doc(alias = "button-sensitivity")]
     fn connect_button_sensitivity_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_button_sensitivity_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_button_sensitivity_trampoline<
+            P: IsA<ComboBox>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkComboBox,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<ComboBox>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&ComboBox::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1082,13 +1073,11 @@ impl<O: IsA<ComboBox>> ComboBoxExt for O {
 
     #[doc(alias = "child")]
     fn connect_child_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_child_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_child_trampoline<P: IsA<ComboBox>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkComboBox,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<ComboBox>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&ComboBox::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1107,13 +1096,14 @@ impl<O: IsA<ComboBox>> ComboBoxExt for O {
 
     #[doc(alias = "entry-text-column")]
     fn connect_entry_text_column_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_entry_text_column_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_entry_text_column_trampoline<
+            P: IsA<ComboBox>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkComboBox,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<ComboBox>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&ComboBox::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1132,13 +1122,11 @@ impl<O: IsA<ComboBox>> ComboBoxExt for O {
 
     #[doc(alias = "has-frame")]
     fn connect_has_frame_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_has_frame_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_has_frame_trampoline<P: IsA<ComboBox>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkComboBox,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<ComboBox>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&ComboBox::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1157,13 +1145,11 @@ impl<O: IsA<ComboBox>> ComboBoxExt for O {
 
     #[doc(alias = "id-column")]
     fn connect_id_column_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_id_column_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_id_column_trampoline<P: IsA<ComboBox>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkComboBox,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<ComboBox>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&ComboBox::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1182,13 +1168,11 @@ impl<O: IsA<ComboBox>> ComboBoxExt for O {
 
     #[doc(alias = "model")]
     fn connect_model_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_model_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_model_trampoline<P: IsA<ComboBox>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkComboBox,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<ComboBox>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&ComboBox::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1207,13 +1191,14 @@ impl<O: IsA<ComboBox>> ComboBoxExt for O {
 
     #[doc(alias = "popup-fixed-width")]
     fn connect_popup_fixed_width_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_popup_fixed_width_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_popup_fixed_width_trampoline<
+            P: IsA<ComboBox>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkComboBox,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<ComboBox>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&ComboBox::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1232,13 +1217,14 @@ impl<O: IsA<ComboBox>> ComboBoxExt for O {
 
     #[doc(alias = "popup-shown")]
     fn connect_popup_shown_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_popup_shown_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_popup_shown_trampoline<
+            P: IsA<ComboBox>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkComboBox,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<ComboBox>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&ComboBox::from_glib_borrow(this).unsafe_cast_ref())
         }

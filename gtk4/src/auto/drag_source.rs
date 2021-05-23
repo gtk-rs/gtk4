@@ -74,7 +74,7 @@ impl DragSource {
     }
 
     #[doc(alias = "gtk_drag_source_set_content")]
-    pub fn set_content<P: IsA<gdk::ContentProvider>>(&self, content: Option<&P>) {
+    pub fn set_content(&self, content: Option<&impl IsA<gdk::ContentProvider>>) {
         unsafe {
             ffi::gtk_drag_source_set_content(
                 self.to_glib_none().0,
@@ -84,7 +84,7 @@ impl DragSource {
     }
 
     #[doc(alias = "gtk_drag_source_set_icon")]
-    pub fn set_icon<P: IsA<gdk::Paintable>>(&self, paintable: Option<&P>, hot_x: i32, hot_y: i32) {
+    pub fn set_icon(&self, paintable: Option<&impl IsA<gdk::Paintable>>, hot_x: i32, hot_y: i32) {
         unsafe {
             ffi::gtk_drag_source_set_icon(
                 self.to_glib_none().0,
@@ -96,10 +96,7 @@ impl DragSource {
     }
 
     #[doc(alias = "drag-begin")]
-    pub fn connect_drag_begin<F: Fn(&DragSource, &gdk::Drag) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_drag_begin<F: Fn(&Self, &gdk::Drag) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn drag_begin_trampoline<F: Fn(&DragSource, &gdk::Drag) + 'static>(
             this: *mut ffi::GtkDragSource,
             drag: *mut gdk::ffi::GdkDrag,
@@ -123,7 +120,7 @@ impl DragSource {
 
     #[doc(alias = "drag-cancel")]
     pub fn connect_drag_cancel<
-        F: Fn(&DragSource, &gdk::Drag, gdk::DragCancelReason) -> bool + 'static,
+        F: Fn(&Self, &gdk::Drag, gdk::DragCancelReason) -> bool + 'static,
     >(
         &self,
         f: F,
@@ -158,7 +155,7 @@ impl DragSource {
     }
 
     #[doc(alias = "drag-end")]
-    pub fn connect_drag_end<F: Fn(&DragSource, &gdk::Drag, bool) + 'static>(
+    pub fn connect_drag_end<F: Fn(&Self, &gdk::Drag, bool) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -189,9 +186,7 @@ impl DragSource {
     }
 
     #[doc(alias = "prepare")]
-    pub fn connect_prepare<
-        F: Fn(&DragSource, f64, f64) -> Option<gdk::ContentProvider> + 'static,
-    >(
+    pub fn connect_prepare<F: Fn(&Self, f64, f64) -> Option<gdk::ContentProvider> + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -220,7 +215,7 @@ impl DragSource {
     }
 
     #[doc(alias = "actions")]
-    pub fn connect_actions_notify<F: Fn(&DragSource) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_actions_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_actions_trampoline<F: Fn(&DragSource) + 'static>(
             this: *mut ffi::GtkDragSource,
             _param_spec: glib::ffi::gpointer,
@@ -243,7 +238,7 @@ impl DragSource {
     }
 
     #[doc(alias = "content")]
-    pub fn connect_content_notify<F: Fn(&DragSource) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_content_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_content_trampoline<F: Fn(&DragSource) + 'static>(
             this: *mut ffi::GtkDragSource,
             _param_spec: glib::ffi::gpointer,
@@ -334,7 +329,7 @@ impl DragSourceBuilder {
         self
     }
 
-    pub fn content<P: IsA<gdk::ContentProvider>>(mut self, content: &P) -> Self {
+    pub fn content(mut self, content: &impl IsA<gdk::ContentProvider>) -> Self {
         self.content = Some(content.clone().upcast());
         self
     }

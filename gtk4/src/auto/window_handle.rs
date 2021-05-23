@@ -51,7 +51,7 @@ impl WindowHandle {
     }
 
     #[doc(alias = "gtk_window_handle_set_child")]
-    pub fn set_child<P: IsA<Widget>>(&self, child: Option<&P>) {
+    pub fn set_child(&self, child: Option<&impl IsA<Widget>>) {
         unsafe {
             ffi::gtk_window_handle_set_child(
                 self.to_glib_none().0,
@@ -61,7 +61,7 @@ impl WindowHandle {
     }
 
     #[doc(alias = "child")]
-    pub fn connect_child_notify<F: Fn(&WindowHandle) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_child_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_child_trampoline<F: Fn(&WindowHandle) + 'static>(
             this: *mut ffi::GtkWindowHandle,
             _param_spec: glib::ffi::gpointer,
@@ -235,7 +235,7 @@ impl WindowHandleBuilder {
             .expect("Failed to create an instance of WindowHandle")
     }
 
-    pub fn child<P: IsA<Widget>>(mut self, child: &P) -> Self {
+    pub fn child(mut self, child: &impl IsA<Widget>) -> Self {
         self.child = Some(child.clone().upcast());
         self
     }
@@ -300,7 +300,7 @@ impl WindowHandleBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }

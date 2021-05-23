@@ -192,10 +192,7 @@ impl MessageDialog {
     }
 
     #[doc(alias = "message-area")]
-    pub fn connect_message_area_notify<F: Fn(&MessageDialog) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_message_area_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_message_area_trampoline<F: Fn(&MessageDialog) + 'static>(
             this: *mut ffi::GtkMessageDialog,
             _param_spec: glib::ffi::gpointer,
@@ -218,10 +215,7 @@ impl MessageDialog {
     }
 
     #[doc(alias = "message-type")]
-    pub fn connect_message_type_notify<F: Fn(&MessageDialog) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_message_type_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_message_type_trampoline<F: Fn(&MessageDialog) + 'static>(
             this: *mut ffi::GtkMessageDialog,
             _param_spec: glib::ffi::gpointer,
@@ -244,10 +238,7 @@ impl MessageDialog {
     }
 
     #[doc(alias = "secondary-text")]
-    pub fn connect_secondary_text_notify<F: Fn(&MessageDialog) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_secondary_text_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_secondary_text_trampoline<F: Fn(&MessageDialog) + 'static>(
             this: *mut ffi::GtkMessageDialog,
             _param_spec: glib::ffi::gpointer,
@@ -270,7 +261,7 @@ impl MessageDialog {
     }
 
     #[doc(alias = "secondary-use-markup")]
-    pub fn connect_secondary_use_markup_notify<F: Fn(&MessageDialog) + 'static>(
+    pub fn connect_secondary_use_markup_notify<F: Fn(&Self) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -298,7 +289,7 @@ impl MessageDialog {
     }
 
     #[doc(alias = "text")]
-    pub fn connect_text_notify<F: Fn(&MessageDialog) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_text_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_text_trampoline<F: Fn(&MessageDialog) + 'static>(
             this: *mut ffi::GtkMessageDialog,
             _param_spec: glib::ffi::gpointer,
@@ -321,10 +312,7 @@ impl MessageDialog {
     }
 
     #[doc(alias = "use-markup")]
-    pub fn connect_use_markup_notify<F: Fn(&MessageDialog) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_use_markup_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_use_markup_trampoline<F: Fn(&MessageDialog) + 'static>(
             this: *mut ffi::GtkMessageDialog,
             _param_spec: glib::ffi::gpointer,
@@ -642,12 +630,12 @@ impl MessageDialogBuilder {
         self
     }
 
-    pub fn application<P: IsA<Application>>(mut self, application: &P) -> Self {
+    pub fn application(mut self, application: &impl IsA<Application>) -> Self {
         self.application = Some(application.clone().upcast());
         self
     }
 
-    pub fn child<P: IsA<Widget>>(mut self, child: &P) -> Self {
+    pub fn child(mut self, child: &impl IsA<Widget>) -> Self {
         self.child = Some(child.clone().upcast());
         self
     }
@@ -662,7 +650,7 @@ impl MessageDialogBuilder {
         self
     }
 
-    pub fn default_widget<P: IsA<Widget>>(mut self, default_widget: &P) -> Self {
+    pub fn default_widget(mut self, default_widget: &impl IsA<Widget>) -> Self {
         self.default_widget = Some(default_widget.clone().upcast());
         self
     }
@@ -692,7 +680,7 @@ impl MessageDialogBuilder {
         self
     }
 
-    pub fn focus_widget<P: IsA<Widget>>(mut self, focus_widget: &P) -> Self {
+    pub fn focus_widget(mut self, focus_widget: &impl IsA<Widget>) -> Self {
         self.focus_widget = Some(focus_widget.clone().upcast());
         self
     }
@@ -749,7 +737,7 @@ impl MessageDialogBuilder {
         self
     }
 
-    pub fn transient_for<P: IsA<Window>>(mut self, transient_for: &P) -> Self {
+    pub fn transient_for(mut self, transient_for: &impl IsA<Window>) -> Self {
         self.transient_for = Some(transient_for.clone().upcast());
         self
     }
@@ -814,7 +802,7 @@ impl MessageDialogBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }

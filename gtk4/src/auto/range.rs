@@ -203,7 +203,7 @@ impl RangeBuilder {
         glib::Object::new::<Range>(&properties).expect("Failed to create an instance of Range")
     }
 
-    pub fn adjustment<P: IsA<Adjustment>>(mut self, adjustment: &P) -> Self {
+    pub fn adjustment(mut self, adjustment: &impl IsA<Adjustment>) -> Self {
         self.adjustment = Some(adjustment.clone().upcast());
         self
     }
@@ -293,7 +293,7 @@ impl RangeBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }
@@ -437,7 +437,7 @@ pub trait RangeExt: 'static {
     fn value(&self) -> f64;
 
     #[doc(alias = "gtk_range_set_adjustment")]
-    fn set_adjustment<P: IsA<Adjustment>>(&self, adjustment: &P);
+    fn set_adjustment(&self, adjustment: &impl IsA<Adjustment>);
 
     #[doc(alias = "gtk_range_set_fill_level")]
     fn set_fill_level(&self, fill_level: f64);
@@ -587,7 +587,7 @@ impl<O: IsA<Range>> RangeExt for O {
         unsafe { ffi::gtk_range_get_value(self.as_ref().to_glib_none().0) }
     }
 
-    fn set_adjustment<P: IsA<Adjustment>>(&self, adjustment: &P) {
+    fn set_adjustment(&self, adjustment: &impl IsA<Adjustment>) {
         unsafe {
             ffi::gtk_range_set_adjustment(
                 self.as_ref().to_glib_none().0,
@@ -667,13 +667,11 @@ impl<O: IsA<Range>> RangeExt for O {
 
     #[doc(alias = "adjust-bounds")]
     fn connect_adjust_bounds<F: Fn(&Self, f64) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn adjust_bounds_trampoline<P, F: Fn(&P, f64) + 'static>(
+        unsafe extern "C" fn adjust_bounds_trampoline<P: IsA<Range>, F: Fn(&P, f64) + 'static>(
             this: *mut ffi::GtkRange,
             value: libc::c_double,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Range>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Range::from_glib_borrow(this).unsafe_cast_ref(), value)
         }
@@ -696,17 +694,14 @@ impl<O: IsA<Range>> RangeExt for O {
         f: F,
     ) -> SignalHandlerId {
         unsafe extern "C" fn change_value_trampoline<
-            P,
+            P: IsA<Range>,
             F: Fn(&P, ScrollType, f64) -> glib::signal::Inhibit + 'static,
         >(
             this: *mut ffi::GtkRange,
             scroll: ffi::GtkScrollType,
             value: libc::c_double,
             f: glib::ffi::gpointer,
-        ) -> glib::ffi::gboolean
-        where
-            P: IsA<Range>,
-        {
+        ) -> glib::ffi::gboolean {
             let f: &F = &*(f as *const F);
             f(
                 &Range::from_glib_borrow(this).unsafe_cast_ref(),
@@ -730,13 +725,14 @@ impl<O: IsA<Range>> RangeExt for O {
 
     #[doc(alias = "move-slider")]
     fn connect_move_slider<F: Fn(&Self, ScrollType) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn move_slider_trampoline<P, F: Fn(&P, ScrollType) + 'static>(
+        unsafe extern "C" fn move_slider_trampoline<
+            P: IsA<Range>,
+            F: Fn(&P, ScrollType) + 'static,
+        >(
             this: *mut ffi::GtkRange,
             step: ffi::GtkScrollType,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Range>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(
                 &Range::from_glib_borrow(this).unsafe_cast_ref(),
@@ -766,12 +762,10 @@ impl<O: IsA<Range>> RangeExt for O {
 
     #[doc(alias = "value-changed")]
     fn connect_value_changed<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn value_changed_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn value_changed_trampoline<P: IsA<Range>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkRange,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Range>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Range::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -790,13 +784,11 @@ impl<O: IsA<Range>> RangeExt for O {
 
     #[doc(alias = "adjustment")]
     fn connect_adjustment_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_adjustment_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_adjustment_trampoline<P: IsA<Range>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkRange,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Range>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Range::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -815,13 +807,11 @@ impl<O: IsA<Range>> RangeExt for O {
 
     #[doc(alias = "fill-level")]
     fn connect_fill_level_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_fill_level_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_fill_level_trampoline<P: IsA<Range>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkRange,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Range>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Range::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -840,13 +830,11 @@ impl<O: IsA<Range>> RangeExt for O {
 
     #[doc(alias = "inverted")]
     fn connect_inverted_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_inverted_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_inverted_trampoline<P: IsA<Range>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkRange,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Range>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Range::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -868,13 +856,14 @@ impl<O: IsA<Range>> RangeExt for O {
         &self,
         f: F,
     ) -> SignalHandlerId {
-        unsafe extern "C" fn notify_restrict_to_fill_level_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_restrict_to_fill_level_trampoline<
+            P: IsA<Range>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkRange,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Range>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Range::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -893,13 +882,11 @@ impl<O: IsA<Range>> RangeExt for O {
 
     #[doc(alias = "round-digits")]
     fn connect_round_digits_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_round_digits_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_round_digits_trampoline<P: IsA<Range>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkRange,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Range>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Range::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -918,13 +905,14 @@ impl<O: IsA<Range>> RangeExt for O {
 
     #[doc(alias = "show-fill-level")]
     fn connect_show_fill_level_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_show_fill_level_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_show_fill_level_trampoline<
+            P: IsA<Range>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkRange,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Range>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Range::from_glib_borrow(this).unsafe_cast_ref())
         }

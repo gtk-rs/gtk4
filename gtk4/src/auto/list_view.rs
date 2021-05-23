@@ -40,9 +40,9 @@ glib::wrapper! {
 
 impl ListView {
     #[doc(alias = "gtk_list_view_new")]
-    pub fn new<P: IsA<SelectionModel>, Q: IsA<ListItemFactory>>(
-        model: Option<&P>,
-        factory: Option<&Q>,
+    pub fn new(
+        model: Option<&impl IsA<SelectionModel>>,
+        factory: Option<&impl IsA<ListItemFactory>>,
     ) -> ListView {
         assert_initialized_main_thread!();
         unsafe {
@@ -114,7 +114,7 @@ impl ListView {
     }
 
     #[doc(alias = "gtk_list_view_set_factory")]
-    pub fn set_factory<P: IsA<ListItemFactory>>(&self, factory: Option<&P>) {
+    pub fn set_factory(&self, factory: Option<&impl IsA<ListItemFactory>>) {
         unsafe {
             ffi::gtk_list_view_set_factory(
                 self.to_glib_none().0,
@@ -124,7 +124,7 @@ impl ListView {
     }
 
     #[doc(alias = "gtk_list_view_set_model")]
-    pub fn set_model<P: IsA<SelectionModel>>(&self, model: Option<&P>) {
+    pub fn set_model(&self, model: Option<&impl IsA<SelectionModel>>) {
         unsafe {
             ffi::gtk_list_view_set_model(
                 self.to_glib_none().0,
@@ -154,7 +154,7 @@ impl ListView {
     }
 
     #[doc(alias = "activate")]
-    pub fn connect_activate<F: Fn(&ListView, u32) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_activate<F: Fn(&Self, u32) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn activate_trampoline<F: Fn(&ListView, u32) + 'static>(
             this: *mut ffi::GtkListView,
             position: libc::c_uint,
@@ -177,7 +177,7 @@ impl ListView {
     }
 
     #[doc(alias = "enable-rubberband")]
-    pub fn connect_enable_rubberband_notify<F: Fn(&ListView) + 'static>(
+    pub fn connect_enable_rubberband_notify<F: Fn(&Self) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -203,7 +203,7 @@ impl ListView {
     }
 
     #[doc(alias = "factory")]
-    pub fn connect_factory_notify<F: Fn(&ListView) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_factory_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_factory_trampoline<F: Fn(&ListView) + 'static>(
             this: *mut ffi::GtkListView,
             _param_spec: glib::ffi::gpointer,
@@ -226,7 +226,7 @@ impl ListView {
     }
 
     #[doc(alias = "model")]
-    pub fn connect_model_notify<F: Fn(&ListView) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_model_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_model_trampoline<F: Fn(&ListView) + 'static>(
             this: *mut ffi::GtkListView,
             _param_spec: glib::ffi::gpointer,
@@ -249,10 +249,7 @@ impl ListView {
     }
 
     #[doc(alias = "show-separators")]
-    pub fn connect_show_separators_notify<F: Fn(&ListView) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_show_separators_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_show_separators_trampoline<F: Fn(&ListView) + 'static>(
             this: *mut ffi::GtkListView,
             _param_spec: glib::ffi::gpointer,
@@ -275,7 +272,7 @@ impl ListView {
     }
 
     #[doc(alias = "single-click-activate")]
-    pub fn connect_single_click_activate_notify<F: Fn(&ListView) + 'static>(
+    pub fn connect_single_click_activate_notify<F: Fn(&Self) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -487,12 +484,12 @@ impl ListViewBuilder {
         self
     }
 
-    pub fn factory<P: IsA<ListItemFactory>>(mut self, factory: &P) -> Self {
+    pub fn factory(mut self, factory: &impl IsA<ListItemFactory>) -> Self {
         self.factory = Some(factory.clone().upcast());
         self
     }
 
-    pub fn model<P: IsA<SelectionModel>>(mut self, model: &P) -> Self {
+    pub fn model(mut self, model: &impl IsA<SelectionModel>) -> Self {
         self.model = Some(model.clone().upcast());
         self
     }
@@ -572,7 +569,7 @@ impl ListViewBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }
@@ -662,7 +659,7 @@ impl ListViewBuilder {
         self
     }
 
-    pub fn hadjustment<P: IsA<Adjustment>>(mut self, hadjustment: &P) -> Self {
+    pub fn hadjustment(mut self, hadjustment: &impl IsA<Adjustment>) -> Self {
         self.hadjustment = Some(hadjustment.clone().upcast());
         self
     }
@@ -672,7 +669,7 @@ impl ListViewBuilder {
         self
     }
 
-    pub fn vadjustment<P: IsA<Adjustment>>(mut self, vadjustment: &P) -> Self {
+    pub fn vadjustment(mut self, vadjustment: &impl IsA<Adjustment>) -> Self {
         self.vadjustment = Some(vadjustment.clone().upcast());
         self
     }

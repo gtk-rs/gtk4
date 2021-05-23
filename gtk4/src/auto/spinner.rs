@@ -72,7 +72,7 @@ impl Spinner {
     }
 
     #[doc(alias = "spinning")]
-    pub fn connect_spinning_notify<F: Fn(&Spinner) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_spinning_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_spinning_trampoline<F: Fn(&Spinner) + 'static>(
             this: *mut ffi::GtkSpinner,
             _param_spec: glib::ffi::gpointer,
@@ -310,7 +310,7 @@ impl SpinnerBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }

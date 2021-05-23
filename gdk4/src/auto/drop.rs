@@ -72,19 +72,16 @@ impl Drop {
     }
 
     #[doc(alias = "gdk_drop_read_value_async")]
-    pub fn read_value_async<
-        P: IsA<gio::Cancellable>,
-        Q: FnOnce(Result<glib::Value, glib::Error>) + Send + 'static,
-    >(
+    pub fn read_value_async<P: FnOnce(Result<glib::Value, glib::Error>) + Send + 'static>(
         &self,
         type_: glib::types::Type,
         io_priority: glib::Priority,
-        cancellable: Option<&P>,
-        callback: Q,
+        cancellable: Option<&impl IsA<gio::Cancellable>>,
+        callback: P,
     ) {
-        let user_data: Box_<Q> = Box_::new(callback);
+        let user_data: Box_<P> = Box_::new(callback);
         unsafe extern "C" fn read_value_async_trampoline<
-            Q: FnOnce(Result<glib::Value, glib::Error>) + Send + 'static,
+            P: FnOnce(Result<glib::Value, glib::Error>) + Send + 'static,
         >(
             _source_object: *mut glib::gobject_ffi::GObject,
             res: *mut gio::ffi::GAsyncResult,
@@ -97,10 +94,10 @@ impl Drop {
             } else {
                 Err(from_glib_full(error))
             };
-            let callback: Box_<Q> = Box_::from_raw(user_data as *mut _);
+            let callback: Box_<P> = Box_::from_raw(user_data as *mut _);
             callback(result);
         }
-        let callback = read_value_async_trampoline::<Q>;
+        let callback = read_value_async_trampoline::<P>;
         unsafe {
             ffi::gdk_drop_read_value_async(
                 self.to_glib_none().0,
@@ -141,7 +138,7 @@ impl Drop {
     }
 
     #[doc(alias = "display")]
-    pub fn connect_display_notify<F: Fn(&Drop) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_display_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_display_trampoline<F: Fn(&Drop) + 'static>(
             this: *mut ffi::GdkDrop,
             _param_spec: glib::ffi::gpointer,

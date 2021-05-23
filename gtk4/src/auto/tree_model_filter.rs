@@ -47,7 +47,7 @@ impl TreeModelFilterBuilder {
             .expect("Failed to create an instance of TreeModelFilter")
     }
 
-    pub fn child_model<P: IsA<TreeModel>>(mut self, child_model: &P) -> Self {
+    pub fn child_model(mut self, child_model: &impl IsA<TreeModel>) -> Self {
         self.child_model = Some(child_model.clone().upcast());
         self
     }

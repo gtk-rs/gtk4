@@ -25,7 +25,7 @@ glib::wrapper! {
 impl TreeModelSort {
     #[doc(alias = "gtk_tree_model_sort_new_with_model")]
     #[doc(alias = "new_with_model")]
-    pub fn with_model<P: IsA<TreeModel>>(child_model: &P) -> TreeModelSort {
+    pub fn with_model(child_model: &impl IsA<TreeModel>) -> TreeModelSort {
         skip_assert_initialized!();
         unsafe {
             from_glib_full(ffi::gtk_tree_model_sort_new_with_model(
@@ -67,7 +67,7 @@ impl TreeModelSortBuilder {
             .expect("Failed to create an instance of TreeModelSort")
     }
 
-    pub fn model<P: IsA<TreeModel>>(mut self, model: &P) -> Self {
+    pub fn model(mut self, model: &impl IsA<TreeModel>) -> Self {
         self.model = Some(model.clone().upcast());
         self
     }

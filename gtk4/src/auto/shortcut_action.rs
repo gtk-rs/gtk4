@@ -39,10 +39,10 @@ pub const NONE_SHORTCUT_ACTION: Option<&ShortcutAction> = None;
 
 pub trait ShortcutActionExt: 'static {
     #[doc(alias = "gtk_shortcut_action_activate")]
-    fn activate<P: IsA<Widget>>(
+    fn activate(
         &self,
         flags: ShortcutActionFlags,
-        widget: &P,
+        widget: &impl IsA<Widget>,
         args: Option<&glib::Variant>,
     ) -> bool;
 
@@ -55,10 +55,10 @@ pub trait ShortcutActionExt: 'static {
 }
 
 impl<O: IsA<ShortcutAction>> ShortcutActionExt for O {
-    fn activate<P: IsA<Widget>>(
+    fn activate(
         &self,
         flags: ShortcutActionFlags,
-        widget: &P,
+        widget: &impl IsA<Widget>,
         args: Option<&glib::Variant>,
     ) -> bool {
         unsafe {

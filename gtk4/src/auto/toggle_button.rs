@@ -258,12 +258,12 @@ impl ToggleButtonBuilder {
         self
     }
 
-    pub fn group<P: IsA<ToggleButton>>(mut self, group: &P) -> Self {
+    pub fn group(mut self, group: &impl IsA<ToggleButton>) -> Self {
         self.group = Some(group.clone().upcast());
         self
     }
 
-    pub fn child<P: IsA<Widget>>(mut self, child: &P) -> Self {
+    pub fn child(mut self, child: &impl IsA<Widget>) -> Self {
         self.child = Some(child.clone().upcast());
         self
     }
@@ -348,7 +348,7 @@ impl ToggleButtonBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }
@@ -460,7 +460,7 @@ pub trait ToggleButtonExt: 'static {
     fn set_active(&self, is_active: bool);
 
     #[doc(alias = "gtk_toggle_button_set_group")]
-    fn set_group<P: IsA<ToggleButton>>(&self, group: Option<&P>);
+    fn set_group(&self, group: Option<&impl IsA<ToggleButton>>);
 
     #[doc(alias = "gtk_toggle_button_toggled")]
     fn toggled(&self);
@@ -493,7 +493,7 @@ impl<O: IsA<ToggleButton>> ToggleButtonExt for O {
         }
     }
 
-    fn set_group<P: IsA<ToggleButton>>(&self, group: Option<&P>) {
+    fn set_group(&self, group: Option<&impl IsA<ToggleButton>>) {
         unsafe {
             ffi::gtk_toggle_button_set_group(
                 self.as_ref().to_glib_none().0,
@@ -510,12 +510,10 @@ impl<O: IsA<ToggleButton>> ToggleButtonExt for O {
 
     #[doc(alias = "toggled")]
     fn connect_toggled<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn toggled_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn toggled_trampoline<P: IsA<ToggleButton>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkToggleButton,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<ToggleButton>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&ToggleButton::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -534,13 +532,11 @@ impl<O: IsA<ToggleButton>> ToggleButtonExt for O {
 
     #[doc(alias = "active")]
     fn connect_active_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_active_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_active_trampoline<P: IsA<ToggleButton>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkToggleButton,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<ToggleButton>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&ToggleButton::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -559,13 +555,11 @@ impl<O: IsA<ToggleButton>> ToggleButtonExt for O {
 
     #[doc(alias = "group")]
     fn connect_group_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_group_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_group_trampoline<P: IsA<ToggleButton>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkToggleButton,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<ToggleButton>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&ToggleButton::from_glib_borrow(this).unsafe_cast_ref())
         }

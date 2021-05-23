@@ -75,10 +75,7 @@ impl VolumeButton {
     }
 
     #[doc(alias = "use-symbolic")]
-    pub fn connect_use_symbolic_notify<F: Fn(&VolumeButton) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_use_symbolic_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_use_symbolic_trampoline<F: Fn(&VolumeButton) + 'static>(
             this: *mut ffi::GtkVolumeButton,
             _param_spec: glib::ffi::gpointer,
@@ -273,7 +270,7 @@ impl VolumeButtonBuilder {
         self
     }
 
-    pub fn adjustment<P: IsA<Adjustment>>(mut self, adjustment: &P) -> Self {
+    pub fn adjustment(mut self, adjustment: &impl IsA<Adjustment>) -> Self {
         self.adjustment = Some(adjustment.clone().upcast());
         self
     }
@@ -348,7 +345,7 @@ impl VolumeButtonBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }

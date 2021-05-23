@@ -24,7 +24,7 @@ glib::wrapper! {
 
 impl MountOperation {
     #[doc(alias = "gtk_mount_operation_new")]
-    pub fn new<P: IsA<Window>>(parent: Option<&P>) -> MountOperation {
+    pub fn new(parent: Option<&impl IsA<Window>>) -> MountOperation {
         assert_initialized_main_thread!();
         unsafe {
             gio::MountOperation::from_glib_full(ffi::gtk_mount_operation_new(
@@ -109,7 +109,7 @@ impl MountOperationBuilder {
         self
     }
 
-    pub fn parent<P: IsA<Window>>(mut self, parent: &P) -> Self {
+    pub fn parent(mut self, parent: &impl IsA<Window>) -> Self {
         self.parent = Some(parent.clone().upcast());
         self
     }
@@ -173,7 +173,7 @@ pub trait MountOperationExt: 'static {
     fn set_display(&self, display: &gdk::Display);
 
     #[doc(alias = "gtk_mount_operation_set_parent")]
-    fn set_parent<P: IsA<Window>>(&self, parent: Option<&P>);
+    fn set_parent(&self, parent: Option<&impl IsA<Window>>);
 
     #[doc(alias = "display")]
     fn connect_display_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;
@@ -219,7 +219,7 @@ impl<O: IsA<MountOperation>> MountOperationExt for O {
         }
     }
 
-    fn set_parent<P: IsA<Window>>(&self, parent: Option<&P>) {
+    fn set_parent(&self, parent: Option<&impl IsA<Window>>) {
         unsafe {
             ffi::gtk_mount_operation_set_parent(
                 self.as_ref().to_glib_none().0,
@@ -230,13 +230,14 @@ impl<O: IsA<MountOperation>> MountOperationExt for O {
 
     #[doc(alias = "display")]
     fn connect_display_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_display_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_display_trampoline<
+            P: IsA<MountOperation>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkMountOperation,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<MountOperation>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&MountOperation::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -255,13 +256,14 @@ impl<O: IsA<MountOperation>> MountOperationExt for O {
 
     #[doc(alias = "is-showing")]
     fn connect_is_showing_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_is_showing_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_is_showing_trampoline<
+            P: IsA<MountOperation>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkMountOperation,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<MountOperation>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&MountOperation::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -280,13 +282,14 @@ impl<O: IsA<MountOperation>> MountOperationExt for O {
 
     #[doc(alias = "parent")]
     fn connect_parent_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_parent_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_parent_trampoline<
+            P: IsA<MountOperation>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkMountOperation,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<MountOperation>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&MountOperation::from_glib_borrow(this).unsafe_cast_ref())
         }

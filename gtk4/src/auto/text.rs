@@ -43,7 +43,7 @@ impl Text {
 
     #[doc(alias = "gtk_text_new_with_buffer")]
     #[doc(alias = "new_with_buffer")]
-    pub fn with_buffer<P: IsA<EntryBuffer>>(buffer: &P) -> Text {
+    pub fn with_buffer(buffer: &impl IsA<EntryBuffer>) -> Text {
         skip_assert_initialized!();
         unsafe {
             Widget::from_glib_none(ffi::gtk_text_new_with_buffer(
@@ -191,7 +191,7 @@ impl Text {
     }
 
     #[doc(alias = "gtk_text_set_buffer")]
-    pub fn set_buffer<P: IsA<EntryBuffer>>(&self, buffer: &P) {
+    pub fn set_buffer(&self, buffer: &impl IsA<EntryBuffer>) {
         unsafe {
             ffi::gtk_text_set_buffer(self.to_glib_none().0, buffer.as_ref().to_glib_none().0);
         }
@@ -208,7 +208,7 @@ impl Text {
     }
 
     #[doc(alias = "gtk_text_set_extra_menu")]
-    pub fn set_extra_menu<P: IsA<gio::MenuModel>>(&self, model: Option<&P>) {
+    pub fn set_extra_menu(&self, model: Option<&impl IsA<gio::MenuModel>>) {
         unsafe {
             ffi::gtk_text_set_extra_menu(
                 self.to_glib_none().0,
@@ -368,7 +368,7 @@ impl Text {
     }
 
     #[doc(alias = "activates-default")]
-    pub fn connect_activates_default_notify<F: Fn(&Text) + 'static>(
+    pub fn connect_activates_default_notify<F: Fn(&Self) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -394,7 +394,7 @@ impl Text {
     }
 
     #[doc(alias = "attributes")]
-    pub fn connect_attributes_notify<F: Fn(&Text) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_attributes_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_attributes_trampoline<F: Fn(&Text) + 'static>(
             this: *mut ffi::GtkText,
             _param_spec: glib::ffi::gpointer,
@@ -417,7 +417,7 @@ impl Text {
     }
 
     #[doc(alias = "buffer")]
-    pub fn connect_buffer_notify<F: Fn(&Text) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_buffer_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_buffer_trampoline<F: Fn(&Text) + 'static>(
             this: *mut ffi::GtkText,
             _param_spec: glib::ffi::gpointer,
@@ -440,7 +440,7 @@ impl Text {
     }
 
     #[doc(alias = "enable-emoji-completion")]
-    pub fn connect_enable_emoji_completion_notify<F: Fn(&Text) + 'static>(
+    pub fn connect_enable_emoji_completion_notify<F: Fn(&Self) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -466,7 +466,7 @@ impl Text {
     }
 
     #[doc(alias = "extra-menu")]
-    pub fn connect_extra_menu_notify<F: Fn(&Text) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_extra_menu_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_extra_menu_trampoline<F: Fn(&Text) + 'static>(
             this: *mut ffi::GtkText,
             _param_spec: glib::ffi::gpointer,
@@ -489,7 +489,7 @@ impl Text {
     }
 
     #[doc(alias = "im-module")]
-    pub fn connect_im_module_notify<F: Fn(&Text) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_im_module_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_im_module_trampoline<F: Fn(&Text) + 'static>(
             this: *mut ffi::GtkText,
             _param_spec: glib::ffi::gpointer,
@@ -512,7 +512,7 @@ impl Text {
     }
 
     #[doc(alias = "input-hints")]
-    pub fn connect_input_hints_notify<F: Fn(&Text) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_input_hints_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_input_hints_trampoline<F: Fn(&Text) + 'static>(
             this: *mut ffi::GtkText,
             _param_spec: glib::ffi::gpointer,
@@ -535,7 +535,7 @@ impl Text {
     }
 
     #[doc(alias = "input-purpose")]
-    pub fn connect_input_purpose_notify<F: Fn(&Text) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_input_purpose_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_input_purpose_trampoline<F: Fn(&Text) + 'static>(
             this: *mut ffi::GtkText,
             _param_spec: glib::ffi::gpointer,
@@ -558,7 +558,7 @@ impl Text {
     }
 
     #[doc(alias = "invisible-char")]
-    pub fn connect_invisible_char_notify<F: Fn(&Text) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_invisible_char_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_invisible_char_trampoline<F: Fn(&Text) + 'static>(
             this: *mut ffi::GtkText,
             _param_spec: glib::ffi::gpointer,
@@ -581,7 +581,7 @@ impl Text {
     }
 
     #[doc(alias = "invisible-char-set")]
-    pub fn connect_invisible_char_set_notify<F: Fn(&Text) + 'static>(
+    pub fn connect_invisible_char_set_notify<F: Fn(&Self) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -607,7 +607,7 @@ impl Text {
     }
 
     #[doc(alias = "max-length")]
-    pub fn connect_max_length_notify<F: Fn(&Text) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_max_length_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_max_length_trampoline<F: Fn(&Text) + 'static>(
             this: *mut ffi::GtkText,
             _param_spec: glib::ffi::gpointer,
@@ -630,7 +630,7 @@ impl Text {
     }
 
     #[doc(alias = "overwrite-mode")]
-    pub fn connect_overwrite_mode_notify<F: Fn(&Text) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_overwrite_mode_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_overwrite_mode_trampoline<F: Fn(&Text) + 'static>(
             this: *mut ffi::GtkText,
             _param_spec: glib::ffi::gpointer,
@@ -653,7 +653,7 @@ impl Text {
     }
 
     #[doc(alias = "placeholder-text")]
-    pub fn connect_placeholder_text_notify<F: Fn(&Text) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_placeholder_text_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_placeholder_text_trampoline<F: Fn(&Text) + 'static>(
             this: *mut ffi::GtkText,
             _param_spec: glib::ffi::gpointer,
@@ -676,7 +676,7 @@ impl Text {
     }
 
     #[doc(alias = "propagate-text-width")]
-    pub fn connect_propagate_text_width_notify<F: Fn(&Text) + 'static>(
+    pub fn connect_propagate_text_width_notify<F: Fn(&Self) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -702,7 +702,7 @@ impl Text {
     }
 
     #[doc(alias = "scroll-offset")]
-    pub fn connect_scroll_offset_notify<F: Fn(&Text) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_scroll_offset_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_scroll_offset_trampoline<F: Fn(&Text) + 'static>(
             this: *mut ffi::GtkText,
             _param_spec: glib::ffi::gpointer,
@@ -725,7 +725,7 @@ impl Text {
     }
 
     #[doc(alias = "tabs")]
-    pub fn connect_tabs_notify<F: Fn(&Text) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_tabs_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_tabs_trampoline<F: Fn(&Text) + 'static>(
             this: *mut ffi::GtkText,
             _param_spec: glib::ffi::gpointer,
@@ -748,7 +748,7 @@ impl Text {
     }
 
     #[doc(alias = "truncate-multiline")]
-    pub fn connect_truncate_multiline_notify<F: Fn(&Text) + 'static>(
+    pub fn connect_truncate_multiline_notify<F: Fn(&Self) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -774,7 +774,7 @@ impl Text {
     }
 
     #[doc(alias = "visibility")]
-    pub fn connect_visibility_notify<F: Fn(&Text) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_visibility_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_visibility_trampoline<F: Fn(&Text) + 'static>(
             this: *mut ffi::GtkText,
             _param_spec: glib::ffi::gpointer,
@@ -1045,7 +1045,7 @@ impl TextBuilder {
         self
     }
 
-    pub fn buffer<P: IsA<EntryBuffer>>(mut self, buffer: &P) -> Self {
+    pub fn buffer(mut self, buffer: &impl IsA<EntryBuffer>) -> Self {
         self.buffer = Some(buffer.clone().upcast());
         self
     }
@@ -1055,7 +1055,7 @@ impl TextBuilder {
         self
     }
 
-    pub fn extra_menu<P: IsA<gio::MenuModel>>(mut self, extra_menu: &P) -> Self {
+    pub fn extra_menu(mut self, extra_menu: &impl IsA<gio::MenuModel>) -> Self {
         self.extra_menu = Some(extra_menu.clone().upcast());
         self
     }
@@ -1180,7 +1180,7 @@ impl TextBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }

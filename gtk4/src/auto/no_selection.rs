@@ -25,7 +25,7 @@ glib::wrapper! {
 
 impl NoSelection {
     #[doc(alias = "gtk_no_selection_new")]
-    pub fn new<P: IsA<gio::ListModel>>(model: Option<&P>) -> NoSelection {
+    pub fn new(model: Option<&impl IsA<gio::ListModel>>) -> NoSelection {
         assert_initialized_main_thread!();
         unsafe {
             from_glib_full(ffi::gtk_no_selection_new(
@@ -48,7 +48,7 @@ impl NoSelection {
     }
 
     #[doc(alias = "gtk_no_selection_set_model")]
-    pub fn set_model<P: IsA<gio::ListModel>>(&self, model: Option<&P>) {
+    pub fn set_model(&self, model: Option<&impl IsA<gio::ListModel>>) {
         unsafe {
             ffi::gtk_no_selection_set_model(
                 self.to_glib_none().0,
@@ -58,7 +58,7 @@ impl NoSelection {
     }
 
     #[doc(alias = "model")]
-    pub fn connect_model_notify<F: Fn(&NoSelection) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_model_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_model_trampoline<F: Fn(&NoSelection) + 'static>(
             this: *mut ffi::GtkNoSelection,
             _param_spec: glib::ffi::gpointer,
@@ -106,7 +106,7 @@ impl NoSelectionBuilder {
             .expect("Failed to create an instance of NoSelection")
     }
 
-    pub fn model<P: IsA<gio::ListModel>>(mut self, model: &P) -> Self {
+    pub fn model(mut self, model: &impl IsA<gio::ListModel>) -> Self {
         self.model = Some(model.clone().upcast());
         self
     }

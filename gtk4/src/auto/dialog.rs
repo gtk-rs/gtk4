@@ -299,12 +299,12 @@ impl DialogBuilder {
         self
     }
 
-    pub fn application<P: IsA<Application>>(mut self, application: &P) -> Self {
+    pub fn application(mut self, application: &impl IsA<Application>) -> Self {
         self.application = Some(application.clone().upcast());
         self
     }
 
-    pub fn child<P: IsA<Widget>>(mut self, child: &P) -> Self {
+    pub fn child(mut self, child: &impl IsA<Widget>) -> Self {
         self.child = Some(child.clone().upcast());
         self
     }
@@ -319,7 +319,7 @@ impl DialogBuilder {
         self
     }
 
-    pub fn default_widget<P: IsA<Widget>>(mut self, default_widget: &P) -> Self {
+    pub fn default_widget(mut self, default_widget: &impl IsA<Widget>) -> Self {
         self.default_widget = Some(default_widget.clone().upcast());
         self
     }
@@ -349,7 +349,7 @@ impl DialogBuilder {
         self
     }
 
-    pub fn focus_widget<P: IsA<Widget>>(mut self, focus_widget: &P) -> Self {
+    pub fn focus_widget(mut self, focus_widget: &impl IsA<Widget>) -> Self {
         self.focus_widget = Some(focus_widget.clone().upcast());
         self
     }
@@ -406,7 +406,7 @@ impl DialogBuilder {
         self
     }
 
-    pub fn transient_for<P: IsA<Window>>(mut self, transient_for: &P) -> Self {
+    pub fn transient_for(mut self, transient_for: &impl IsA<Window>) -> Self {
         self.transient_for = Some(transient_for.clone().upcast());
         self
     }
@@ -471,7 +471,7 @@ impl DialogBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }
@@ -566,7 +566,7 @@ pub const NONE_DIALOG: Option<&Dialog> = None;
 
 pub trait DialogExt: 'static {
     #[doc(alias = "gtk_dialog_add_action_widget")]
-    fn add_action_widget<P: IsA<Widget>>(&self, child: &P, response_id: ResponseType);
+    fn add_action_widget(&self, child: &impl IsA<Widget>, response_id: ResponseType);
 
     #[doc(alias = "gtk_dialog_add_button")]
     fn add_button(&self, button_text: &str, response_id: ResponseType) -> Widget;
@@ -605,7 +605,7 @@ pub trait DialogExt: 'static {
 }
 
 impl<O: IsA<Dialog>> DialogExt for O {
-    fn add_action_widget<P: IsA<Widget>>(&self, child: &P, response_id: ResponseType) {
+    fn add_action_widget(&self, child: &impl IsA<Widget>, response_id: ResponseType) {
         unsafe {
             ffi::gtk_dialog_add_action_widget(
                 self.as_ref().to_glib_none().0,
@@ -691,12 +691,10 @@ impl<O: IsA<Dialog>> DialogExt for O {
 
     #[doc(alias = "close")]
     fn connect_close<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn close_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn close_trampoline<P: IsA<Dialog>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkDialog,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Dialog>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Dialog::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -723,13 +721,14 @@ impl<O: IsA<Dialog>> DialogExt for O {
 
     #[doc(alias = "response")]
     fn connect_response<F: Fn(&Self, ResponseType) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn response_trampoline<P, F: Fn(&P, ResponseType) + 'static>(
+        unsafe extern "C" fn response_trampoline<
+            P: IsA<Dialog>,
+            F: Fn(&P, ResponseType) + 'static,
+        >(
             this: *mut ffi::GtkDialog,
             response_id: ffi::GtkResponseType,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Dialog>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(
                 &Dialog::from_glib_borrow(this).unsafe_cast_ref(),

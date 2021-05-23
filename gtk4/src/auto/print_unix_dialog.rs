@@ -42,7 +42,7 @@ glib::wrapper! {
 
 impl PrintUnixDialog {
     #[doc(alias = "gtk_print_unix_dialog_new")]
-    pub fn new<P: IsA<Window>>(title: Option<&str>, parent: Option<&P>) -> PrintUnixDialog {
+    pub fn new(title: Option<&str>, parent: Option<&impl IsA<Window>>) -> PrintUnixDialog {
         assert_initialized_main_thread!();
         unsafe {
             Widget::from_glib_none(ffi::gtk_print_unix_dialog_new(
@@ -61,7 +61,7 @@ impl PrintUnixDialog {
     }
 
     #[doc(alias = "gtk_print_unix_dialog_add_custom_tab")]
-    pub fn add_custom_tab<P: IsA<Widget>, Q: IsA<Widget>>(&self, child: &P, tab_label: &Q) {
+    pub fn add_custom_tab(&self, child: &impl IsA<Widget>, tab_label: &impl IsA<Widget>) {
         unsafe {
             ffi::gtk_print_unix_dialog_add_custom_tab(
                 self.to_glib_none().0,
@@ -251,10 +251,7 @@ impl PrintUnixDialog {
     }
 
     #[doc(alias = "current-page")]
-    pub fn connect_current_page_notify<F: Fn(&PrintUnixDialog) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_current_page_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_current_page_trampoline<F: Fn(&PrintUnixDialog) + 'static>(
             this: *mut ffi::GtkPrintUnixDialog,
             _param_spec: glib::ffi::gpointer,
@@ -277,10 +274,7 @@ impl PrintUnixDialog {
     }
 
     #[doc(alias = "embed-page-setup")]
-    pub fn connect_embed_page_setup_notify<F: Fn(&PrintUnixDialog) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_embed_page_setup_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_embed_page_setup_trampoline<
             F: Fn(&PrintUnixDialog) + 'static,
         >(
@@ -305,10 +299,7 @@ impl PrintUnixDialog {
     }
 
     #[doc(alias = "has-selection")]
-    pub fn connect_has_selection_notify<F: Fn(&PrintUnixDialog) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_has_selection_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_has_selection_trampoline<F: Fn(&PrintUnixDialog) + 'static>(
             this: *mut ffi::GtkPrintUnixDialog,
             _param_spec: glib::ffi::gpointer,
@@ -331,7 +322,7 @@ impl PrintUnixDialog {
     }
 
     #[doc(alias = "manual-capabilities")]
-    pub fn connect_manual_capabilities_notify<F: Fn(&PrintUnixDialog) + 'static>(
+    pub fn connect_manual_capabilities_notify<F: Fn(&Self) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -359,10 +350,7 @@ impl PrintUnixDialog {
     }
 
     #[doc(alias = "page-setup")]
-    pub fn connect_page_setup_notify<F: Fn(&PrintUnixDialog) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_page_setup_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_page_setup_trampoline<F: Fn(&PrintUnixDialog) + 'static>(
             this: *mut ffi::GtkPrintUnixDialog,
             _param_spec: glib::ffi::gpointer,
@@ -385,10 +373,7 @@ impl PrintUnixDialog {
     }
 
     #[doc(alias = "print-settings")]
-    pub fn connect_print_settings_notify<F: Fn(&PrintUnixDialog) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_print_settings_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_print_settings_trampoline<F: Fn(&PrintUnixDialog) + 'static>(
             this: *mut ffi::GtkPrintUnixDialog,
             _param_spec: glib::ffi::gpointer,
@@ -411,10 +396,7 @@ impl PrintUnixDialog {
     }
 
     #[doc(alias = "selected-printer")]
-    pub fn connect_selected_printer_notify<F: Fn(&PrintUnixDialog) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_selected_printer_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_selected_printer_trampoline<
             F: Fn(&PrintUnixDialog) + 'static,
         >(
@@ -439,7 +421,7 @@ impl PrintUnixDialog {
     }
 
     #[doc(alias = "support-selection")]
-    pub fn connect_support_selection_notify<F: Fn(&PrintUnixDialog) + 'static>(
+    pub fn connect_support_selection_notify<F: Fn(&Self) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -771,12 +753,12 @@ impl PrintUnixDialogBuilder {
         self
     }
 
-    pub fn application<P: IsA<Application>>(mut self, application: &P) -> Self {
+    pub fn application(mut self, application: &impl IsA<Application>) -> Self {
         self.application = Some(application.clone().upcast());
         self
     }
 
-    pub fn child<P: IsA<Widget>>(mut self, child: &P) -> Self {
+    pub fn child(mut self, child: &impl IsA<Widget>) -> Self {
         self.child = Some(child.clone().upcast());
         self
     }
@@ -791,7 +773,7 @@ impl PrintUnixDialogBuilder {
         self
     }
 
-    pub fn default_widget<P: IsA<Widget>>(mut self, default_widget: &P) -> Self {
+    pub fn default_widget(mut self, default_widget: &impl IsA<Widget>) -> Self {
         self.default_widget = Some(default_widget.clone().upcast());
         self
     }
@@ -821,7 +803,7 @@ impl PrintUnixDialogBuilder {
         self
     }
 
-    pub fn focus_widget<P: IsA<Widget>>(mut self, focus_widget: &P) -> Self {
+    pub fn focus_widget(mut self, focus_widget: &impl IsA<Widget>) -> Self {
         self.focus_widget = Some(focus_widget.clone().upcast());
         self
     }
@@ -878,7 +860,7 @@ impl PrintUnixDialogBuilder {
         self
     }
 
-    pub fn transient_for<P: IsA<Window>>(mut self, transient_for: &P) -> Self {
+    pub fn transient_for(mut self, transient_for: &impl IsA<Window>) -> Self {
         self.transient_for = Some(transient_for.clone().upcast());
         self
     }
@@ -943,7 +925,7 @@ impl PrintUnixDialogBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }

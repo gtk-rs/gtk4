@@ -34,9 +34,9 @@ impl StyleContext {
     }
 
     #[doc(alias = "gtk_style_context_add_provider_for_display")]
-    pub fn add_provider_for_display<P: IsA<StyleProvider>>(
+    pub fn add_provider_for_display(
         display: &gdk::Display,
-        provider: &P,
+        provider: &impl IsA<StyleProvider>,
         priority: u32,
     ) {
         skip_assert_initialized!();
@@ -50,10 +50,7 @@ impl StyleContext {
     }
 
     #[doc(alias = "gtk_style_context_remove_provider_for_display")]
-    pub fn remove_provider_for_display<P: IsA<StyleProvider>>(
-        display: &gdk::Display,
-        provider: &P,
-    ) {
+    pub fn remove_provider_for_display(display: &gdk::Display, provider: &impl IsA<StyleProvider>) {
         skip_assert_initialized!();
         unsafe {
             ffi::gtk_style_context_remove_provider_for_display(
@@ -102,7 +99,7 @@ pub trait StyleContextExt: 'static {
     fn add_class(&self, class_name: &str);
 
     #[doc(alias = "gtk_style_context_add_provider")]
-    fn add_provider<P: IsA<StyleProvider>>(&self, provider: &P, priority: u32);
+    fn add_provider(&self, provider: &impl IsA<StyleProvider>, priority: u32);
 
     #[doc(alias = "gtk_style_context_get_border")]
     #[doc(alias = "get_border")]
@@ -142,7 +139,7 @@ pub trait StyleContextExt: 'static {
     fn remove_class(&self, class_name: &str);
 
     #[doc(alias = "gtk_style_context_remove_provider")]
-    fn remove_provider<P: IsA<StyleProvider>>(&self, provider: &P);
+    fn remove_provider(&self, provider: &impl IsA<StyleProvider>);
 
     #[doc(alias = "gtk_style_context_restore")]
     fn restore(&self);
@@ -176,7 +173,7 @@ impl<O: IsA<StyleContext>> StyleContextExt for O {
         }
     }
 
-    fn add_provider<P: IsA<StyleProvider>>(&self, provider: &P, priority: u32) {
+    fn add_provider(&self, provider: &impl IsA<StyleProvider>, priority: u32) {
         unsafe {
             ffi::gtk_style_context_add_provider(
                 self.as_ref().to_glib_none().0,
@@ -284,7 +281,7 @@ impl<O: IsA<StyleContext>> StyleContextExt for O {
         }
     }
 
-    fn remove_provider<P: IsA<StyleProvider>>(&self, provider: &P) {
+    fn remove_provider(&self, provider: &impl IsA<StyleProvider>) {
         unsafe {
             ffi::gtk_style_context_remove_provider(
                 self.as_ref().to_glib_none().0,
@@ -337,13 +334,14 @@ impl<O: IsA<StyleContext>> StyleContextExt for O {
 
     #[doc(alias = "display")]
     fn connect_display_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_display_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_display_trampoline<
+            P: IsA<StyleContext>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkStyleContext,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<StyleContext>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&StyleContext::from_glib_borrow(this).unsafe_cast_ref())
         }

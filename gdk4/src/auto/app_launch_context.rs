@@ -44,7 +44,7 @@ impl AppLaunchContext {
     }
 
     #[doc(alias = "gdk_app_launch_context_set_icon")]
-    pub fn set_icon<P: IsA<gio::Icon>>(&self, icon: Option<&P>) {
+    pub fn set_icon(&self, icon: Option<&impl IsA<gio::Icon>>) {
         unsafe {
             ffi::gdk_app_launch_context_set_icon(
                 self.to_glib_none().0,

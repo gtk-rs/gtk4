@@ -75,7 +75,7 @@ impl ListItem {
     }
 
     #[doc(alias = "gtk_list_item_set_child")]
-    pub fn set_child<P: IsA<Widget>>(&self, child: Option<&P>) {
+    pub fn set_child(&self, child: Option<&impl IsA<Widget>>) {
         unsafe {
             ffi::gtk_list_item_set_child(
                 self.to_glib_none().0,
@@ -92,7 +92,7 @@ impl ListItem {
     }
 
     #[doc(alias = "activatable")]
-    pub fn connect_activatable_notify<F: Fn(&ListItem) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_activatable_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_activatable_trampoline<F: Fn(&ListItem) + 'static>(
             this: *mut ffi::GtkListItem,
             _param_spec: glib::ffi::gpointer,
@@ -115,7 +115,7 @@ impl ListItem {
     }
 
     #[doc(alias = "child")]
-    pub fn connect_child_notify<F: Fn(&ListItem) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_child_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_child_trampoline<F: Fn(&ListItem) + 'static>(
             this: *mut ffi::GtkListItem,
             _param_spec: glib::ffi::gpointer,
@@ -138,7 +138,7 @@ impl ListItem {
     }
 
     #[doc(alias = "item")]
-    pub fn connect_item_notify<F: Fn(&ListItem) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_item_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_item_trampoline<F: Fn(&ListItem) + 'static>(
             this: *mut ffi::GtkListItem,
             _param_spec: glib::ffi::gpointer,
@@ -161,7 +161,7 @@ impl ListItem {
     }
 
     #[doc(alias = "position")]
-    pub fn connect_position_notify<F: Fn(&ListItem) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_position_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_position_trampoline<F: Fn(&ListItem) + 'static>(
             this: *mut ffi::GtkListItem,
             _param_spec: glib::ffi::gpointer,
@@ -184,7 +184,7 @@ impl ListItem {
     }
 
     #[doc(alias = "selectable")]
-    pub fn connect_selectable_notify<F: Fn(&ListItem) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_selectable_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_selectable_trampoline<F: Fn(&ListItem) + 'static>(
             this: *mut ffi::GtkListItem,
             _param_spec: glib::ffi::gpointer,
@@ -207,7 +207,7 @@ impl ListItem {
     }
 
     #[doc(alias = "selected")]
-    pub fn connect_selected_notify<F: Fn(&ListItem) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_selected_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_selected_trampoline<F: Fn(&ListItem) + 'static>(
             this: *mut ffi::GtkListItem,
             _param_spec: glib::ffi::gpointer,
@@ -268,7 +268,7 @@ impl ListItemBuilder {
         self
     }
 
-    pub fn child<P: IsA<Widget>>(mut self, child: &P) -> Self {
+    pub fn child(mut self, child: &impl IsA<Widget>) -> Self {
         self.child = Some(child.clone().upcast());
         self
     }

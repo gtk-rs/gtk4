@@ -24,11 +24,7 @@ glib::wrapper! {
 
 impl SliceListModel {
     #[doc(alias = "gtk_slice_list_model_new")]
-    pub fn new<P: IsA<gio::ListModel>>(
-        model: Option<&P>,
-        offset: u32,
-        size: u32,
-    ) -> SliceListModel {
+    pub fn new(model: Option<&impl IsA<gio::ListModel>>, offset: u32, size: u32) -> SliceListModel {
         assert_initialized_main_thread!();
         unsafe {
             from_glib_full(ffi::gtk_slice_list_model_new(
@@ -65,7 +61,7 @@ impl SliceListModel {
     }
 
     #[doc(alias = "gtk_slice_list_model_set_model")]
-    pub fn set_model<P: IsA<gio::ListModel>>(&self, model: Option<&P>) {
+    pub fn set_model(&self, model: Option<&impl IsA<gio::ListModel>>) {
         unsafe {
             ffi::gtk_slice_list_model_set_model(
                 self.to_glib_none().0,
@@ -89,7 +85,7 @@ impl SliceListModel {
     }
 
     #[doc(alias = "model")]
-    pub fn connect_model_notify<F: Fn(&SliceListModel) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_model_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_model_trampoline<F: Fn(&SliceListModel) + 'static>(
             this: *mut ffi::GtkSliceListModel,
             _param_spec: glib::ffi::gpointer,
@@ -112,7 +108,7 @@ impl SliceListModel {
     }
 
     #[doc(alias = "offset")]
-    pub fn connect_offset_notify<F: Fn(&SliceListModel) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_offset_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_offset_trampoline<F: Fn(&SliceListModel) + 'static>(
             this: *mut ffi::GtkSliceListModel,
             _param_spec: glib::ffi::gpointer,
@@ -135,7 +131,7 @@ impl SliceListModel {
     }
 
     #[doc(alias = "size")]
-    pub fn connect_size_notify<F: Fn(&SliceListModel) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_size_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_size_trampoline<F: Fn(&SliceListModel) + 'static>(
             this: *mut ffi::GtkSliceListModel,
             _param_spec: glib::ffi::gpointer,
@@ -191,7 +187,7 @@ impl SliceListModelBuilder {
             .expect("Failed to create an instance of SliceListModel")
     }
 
-    pub fn model<P: IsA<gio::ListModel>>(mut self, model: &P) -> Self {
+    pub fn model(mut self, model: &impl IsA<gio::ListModel>) -> Self {
         self.model = Some(model.clone().upcast());
         self
     }

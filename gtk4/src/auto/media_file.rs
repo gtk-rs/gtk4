@@ -29,7 +29,7 @@ impl MediaFile {
 
     #[doc(alias = "gtk_media_file_new_for_file")]
     #[doc(alias = "new_for_file")]
-    pub fn for_file<P: IsA<gio::File>>(file: &P) -> MediaFile {
+    pub fn for_file(file: &impl IsA<gio::File>) -> MediaFile {
         assert_initialized_main_thread!();
         unsafe {
             from_glib_full(ffi::gtk_media_file_new_for_file(
@@ -51,7 +51,7 @@ impl MediaFile {
 
     #[doc(alias = "gtk_media_file_new_for_input_stream")]
     #[doc(alias = "new_for_input_stream")]
-    pub fn for_input_stream<P: IsA<gio::InputStream>>(stream: &P) -> MediaFile {
+    pub fn for_input_stream(stream: &impl IsA<gio::InputStream>) -> MediaFile {
         assert_initialized_main_thread!();
         unsafe {
             from_glib_full(ffi::gtk_media_file_new_for_input_stream(
@@ -93,13 +93,13 @@ pub trait MediaFileExt: 'static {
     fn input_stream(&self) -> Option<gio::InputStream>;
 
     #[doc(alias = "gtk_media_file_set_file")]
-    fn set_file<P: IsA<gio::File>>(&self, file: Option<&P>);
+    fn set_file(&self, file: Option<&impl IsA<gio::File>>);
 
     #[doc(alias = "gtk_media_file_set_filename")]
     fn set_filename(&self, filename: Option<&str>);
 
     #[doc(alias = "gtk_media_file_set_input_stream")]
-    fn set_input_stream<P: IsA<gio::InputStream>>(&self, stream: Option<&P>);
+    fn set_input_stream(&self, stream: Option<&impl IsA<gio::InputStream>>);
 
     #[doc(alias = "gtk_media_file_set_resource")]
     fn set_resource(&self, resource_path: Option<&str>);
@@ -130,7 +130,7 @@ impl<O: IsA<MediaFile>> MediaFileExt for O {
         }
     }
 
-    fn set_file<P: IsA<gio::File>>(&self, file: Option<&P>) {
+    fn set_file(&self, file: Option<&impl IsA<gio::File>>) {
         unsafe {
             ffi::gtk_media_file_set_file(
                 self.as_ref().to_glib_none().0,
@@ -148,7 +148,7 @@ impl<O: IsA<MediaFile>> MediaFileExt for O {
         }
     }
 
-    fn set_input_stream<P: IsA<gio::InputStream>>(&self, stream: Option<&P>) {
+    fn set_input_stream(&self, stream: Option<&impl IsA<gio::InputStream>>) {
         unsafe {
             ffi::gtk_media_file_set_input_stream(
                 self.as_ref().to_glib_none().0,
@@ -168,13 +168,11 @@ impl<O: IsA<MediaFile>> MediaFileExt for O {
 
     #[doc(alias = "file")]
     fn connect_file_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_file_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_file_trampoline<P: IsA<MediaFile>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkMediaFile,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<MediaFile>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&MediaFile::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -193,13 +191,14 @@ impl<O: IsA<MediaFile>> MediaFileExt for O {
 
     #[doc(alias = "input-stream")]
     fn connect_input_stream_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_input_stream_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_input_stream_trampoline<
+            P: IsA<MediaFile>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkMediaFile,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<MediaFile>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&MediaFile::from_glib_borrow(this).unsafe_cast_ref())
         }

@@ -25,7 +25,7 @@ glib::wrapper! {
 
 impl TreeListRowSorter {
     #[doc(alias = "gtk_tree_list_row_sorter_new")]
-    pub fn new<P: IsA<Sorter>>(sorter: Option<&P>) -> TreeListRowSorter {
+    pub fn new(sorter: Option<&impl IsA<Sorter>>) -> TreeListRowSorter {
         assert_initialized_main_thread!();
         unsafe {
             from_glib_full(ffi::gtk_tree_list_row_sorter_new(
@@ -52,7 +52,7 @@ impl TreeListRowSorter {
     }
 
     #[doc(alias = "gtk_tree_list_row_sorter_set_sorter")]
-    pub fn set_sorter<P: IsA<Sorter>>(&self, sorter: Option<&P>) {
+    pub fn set_sorter(&self, sorter: Option<&impl IsA<Sorter>>) {
         unsafe {
             ffi::gtk_tree_list_row_sorter_set_sorter(
                 self.to_glib_none().0,
@@ -62,10 +62,7 @@ impl TreeListRowSorter {
     }
 
     #[doc(alias = "sorter")]
-    pub fn connect_sorter_notify<F: Fn(&TreeListRowSorter) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_sorter_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_sorter_trampoline<F: Fn(&TreeListRowSorter) + 'static>(
             this: *mut ffi::GtkTreeListRowSorter,
             _param_spec: glib::ffi::gpointer,
@@ -113,7 +110,7 @@ impl TreeListRowSorterBuilder {
             .expect("Failed to create an instance of TreeListRowSorter")
     }
 
-    pub fn sorter<P: IsA<Sorter>>(mut self, sorter: &P) -> Self {
+    pub fn sorter(mut self, sorter: &impl IsA<Sorter>) -> Self {
         self.sorter = Some(sorter.clone().upcast());
         self
     }

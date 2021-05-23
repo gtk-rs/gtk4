@@ -332,12 +332,12 @@ impl WindowBuilder {
         glib::Object::new::<Window>(&properties).expect("Failed to create an instance of Window")
     }
 
-    pub fn application<P: IsA<Application>>(mut self, application: &P) -> Self {
+    pub fn application(mut self, application: &impl IsA<Application>) -> Self {
         self.application = Some(application.clone().upcast());
         self
     }
 
-    pub fn child<P: IsA<Widget>>(mut self, child: &P) -> Self {
+    pub fn child(mut self, child: &impl IsA<Widget>) -> Self {
         self.child = Some(child.clone().upcast());
         self
     }
@@ -352,7 +352,7 @@ impl WindowBuilder {
         self
     }
 
-    pub fn default_widget<P: IsA<Widget>>(mut self, default_widget: &P) -> Self {
+    pub fn default_widget(mut self, default_widget: &impl IsA<Widget>) -> Self {
         self.default_widget = Some(default_widget.clone().upcast());
         self
     }
@@ -382,7 +382,7 @@ impl WindowBuilder {
         self
     }
 
-    pub fn focus_widget<P: IsA<Widget>>(mut self, focus_widget: &P) -> Self {
+    pub fn focus_widget(mut self, focus_widget: &impl IsA<Widget>) -> Self {
         self.focus_widget = Some(focus_widget.clone().upcast());
         self
     }
@@ -439,7 +439,7 @@ impl WindowBuilder {
         self
     }
 
-    pub fn transient_for<P: IsA<Window>>(mut self, transient_for: &P) -> Self {
+    pub fn transient_for(mut self, transient_for: &impl IsA<Window>) -> Self {
         self.transient_for = Some(transient_for.clone().upcast());
         self
     }
@@ -504,7 +504,7 @@ impl WindowBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }
@@ -709,10 +709,10 @@ pub trait GtkWindowExt: 'static {
     fn present_with_time(&self, timestamp: u32);
 
     #[doc(alias = "gtk_window_set_application")]
-    fn set_application<P: IsA<Application>>(&self, application: Option<&P>);
+    fn set_application(&self, application: Option<&impl IsA<Application>>);
 
     #[doc(alias = "gtk_window_set_child")]
-    fn set_child<P: IsA<Widget>>(&self, child: Option<&P>);
+    fn set_child(&self, child: Option<&impl IsA<Widget>>);
 
     #[doc(alias = "gtk_window_set_decorated")]
     fn set_decorated(&self, setting: bool);
@@ -721,7 +721,7 @@ pub trait GtkWindowExt: 'static {
     fn set_default_size(&self, width: i32, height: i32);
 
     #[doc(alias = "gtk_window_set_default_widget")]
-    fn set_default_widget<P: IsA<Widget>>(&self, default_widget: Option<&P>);
+    fn set_default_widget(&self, default_widget: Option<&impl IsA<Widget>>);
 
     #[doc(alias = "gtk_window_set_deletable")]
     fn set_deletable(&self, setting: bool);
@@ -762,10 +762,10 @@ pub trait GtkWindowExt: 'static {
     fn set_title(&self, title: Option<&str>);
 
     #[doc(alias = "gtk_window_set_titlebar")]
-    fn set_titlebar<P: IsA<Widget>>(&self, titlebar: Option<&P>);
+    fn set_titlebar(&self, titlebar: Option<&impl IsA<Widget>>);
 
     #[doc(alias = "gtk_window_set_transient_for")]
-    fn set_transient_for<P: IsA<Window>>(&self, parent: Option<&P>);
+    fn set_transient_for(&self, parent: Option<&impl IsA<Window>>);
 
     #[doc(alias = "gtk_window_unfullscreen")]
     fn unfullscreen(&self);
@@ -1104,7 +1104,7 @@ impl<O: IsA<Window>> GtkWindowExt for O {
         }
     }
 
-    fn set_application<P: IsA<Application>>(&self, application: Option<&P>) {
+    fn set_application(&self, application: Option<&impl IsA<Application>>) {
         unsafe {
             ffi::gtk_window_set_application(
                 self.as_ref().to_glib_none().0,
@@ -1113,7 +1113,7 @@ impl<O: IsA<Window>> GtkWindowExt for O {
         }
     }
 
-    fn set_child<P: IsA<Widget>>(&self, child: Option<&P>) {
+    fn set_child(&self, child: Option<&impl IsA<Widget>>) {
         unsafe {
             ffi::gtk_window_set_child(
                 self.as_ref().to_glib_none().0,
@@ -1134,7 +1134,7 @@ impl<O: IsA<Window>> GtkWindowExt for O {
         }
     }
 
-    fn set_default_widget<P: IsA<Widget>>(&self, default_widget: Option<&P>) {
+    fn set_default_widget(&self, default_widget: Option<&impl IsA<Widget>>) {
         unsafe {
             ffi::gtk_window_set_default_widget(
                 self.as_ref().to_glib_none().0,
@@ -1229,7 +1229,7 @@ impl<O: IsA<Window>> GtkWindowExt for O {
         }
     }
 
-    fn set_titlebar<P: IsA<Widget>>(&self, titlebar: Option<&P>) {
+    fn set_titlebar(&self, titlebar: Option<&impl IsA<Widget>>) {
         unsafe {
             ffi::gtk_window_set_titlebar(
                 self.as_ref().to_glib_none().0,
@@ -1238,7 +1238,7 @@ impl<O: IsA<Window>> GtkWindowExt for O {
         }
     }
 
-    fn set_transient_for<P: IsA<Window>>(&self, parent: Option<&P>) {
+    fn set_transient_for(&self, parent: Option<&impl IsA<Window>>) {
         unsafe {
             ffi::gtk_window_set_transient_for(
                 self.as_ref().to_glib_none().0,
@@ -1373,12 +1373,10 @@ impl<O: IsA<Window>> GtkWindowExt for O {
 
     #[doc(alias = "activate-default")]
     fn connect_activate_default<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn activate_default_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn activate_default_trampoline<P: IsA<Window>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkWindow,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Window>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1405,12 +1403,10 @@ impl<O: IsA<Window>> GtkWindowExt for O {
 
     #[doc(alias = "activate-focus")]
     fn connect_activate_focus<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn activate_focus_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn activate_focus_trampoline<P: IsA<Window>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkWindow,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Window>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1441,15 +1437,12 @@ impl<O: IsA<Window>> GtkWindowExt for O {
         f: F,
     ) -> SignalHandlerId {
         unsafe extern "C" fn close_request_trampoline<
-            P,
+            P: IsA<Window>,
             F: Fn(&P) -> glib::signal::Inhibit + 'static,
         >(
             this: *mut ffi::GtkWindow,
             f: glib::ffi::gpointer,
-        ) -> glib::ffi::gboolean
-        where
-            P: IsA<Window>,
-        {
+        ) -> glib::ffi::gboolean {
             let f: &F = &*(f as *const F);
             f(&Window::from_glib_borrow(this).unsafe_cast_ref()).into_glib()
         }
@@ -1471,14 +1464,14 @@ impl<O: IsA<Window>> GtkWindowExt for O {
         &self,
         f: F,
     ) -> SignalHandlerId {
-        unsafe extern "C" fn enable_debugging_trampoline<P, F: Fn(&P, bool) -> bool + 'static>(
+        unsafe extern "C" fn enable_debugging_trampoline<
+            P: IsA<Window>,
+            F: Fn(&P, bool) -> bool + 'static,
+        >(
             this: *mut ffi::GtkWindow,
             toggle: glib::ffi::gboolean,
             f: glib::ffi::gpointer,
-        ) -> glib::ffi::gboolean
-        where
-            P: IsA<Window>,
-        {
+        ) -> glib::ffi::gboolean {
             let f: &F = &*(f as *const F);
             f(
                 &Window::from_glib_borrow(this).unsafe_cast_ref(),
@@ -1512,12 +1505,10 @@ impl<O: IsA<Window>> GtkWindowExt for O {
 
     #[doc(alias = "keys-changed")]
     fn connect_keys_changed<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn keys_changed_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn keys_changed_trampoline<P: IsA<Window>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkWindow,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Window>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1536,13 +1527,11 @@ impl<O: IsA<Window>> GtkWindowExt for O {
 
     #[doc(alias = "application")]
     fn connect_application_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_application_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_application_trampoline<P: IsA<Window>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkWindow,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Window>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1561,13 +1550,11 @@ impl<O: IsA<Window>> GtkWindowExt for O {
 
     #[doc(alias = "child")]
     fn connect_child_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_child_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_child_trampoline<P: IsA<Window>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkWindow,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Window>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1586,13 +1573,11 @@ impl<O: IsA<Window>> GtkWindowExt for O {
 
     #[doc(alias = "decorated")]
     fn connect_decorated_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_decorated_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_decorated_trampoline<P: IsA<Window>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkWindow,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Window>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1611,13 +1596,14 @@ impl<O: IsA<Window>> GtkWindowExt for O {
 
     #[doc(alias = "default-height")]
     fn connect_default_height_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_default_height_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_default_height_trampoline<
+            P: IsA<Window>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkWindow,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Window>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1636,13 +1622,14 @@ impl<O: IsA<Window>> GtkWindowExt for O {
 
     #[doc(alias = "default-widget")]
     fn connect_default_widget_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_default_widget_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_default_widget_trampoline<
+            P: IsA<Window>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkWindow,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Window>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1661,13 +1648,14 @@ impl<O: IsA<Window>> GtkWindowExt for O {
 
     #[doc(alias = "default-width")]
     fn connect_default_width_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_default_width_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_default_width_trampoline<
+            P: IsA<Window>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkWindow,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Window>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1686,13 +1674,11 @@ impl<O: IsA<Window>> GtkWindowExt for O {
 
     #[doc(alias = "deletable")]
     fn connect_deletable_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_deletable_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_deletable_trampoline<P: IsA<Window>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkWindow,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Window>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1711,13 +1697,14 @@ impl<O: IsA<Window>> GtkWindowExt for O {
 
     #[doc(alias = "destroy-with-parent")]
     fn connect_destroy_with_parent_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_destroy_with_parent_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_destroy_with_parent_trampoline<
+            P: IsA<Window>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkWindow,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Window>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1736,13 +1723,11 @@ impl<O: IsA<Window>> GtkWindowExt for O {
 
     #[doc(alias = "display")]
     fn connect_display_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_display_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_display_trampoline<P: IsA<Window>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkWindow,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Window>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1761,13 +1746,14 @@ impl<O: IsA<Window>> GtkWindowExt for O {
 
     #[doc(alias = "focus-visible")]
     fn connect_focus_visible_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_focus_visible_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_focus_visible_trampoline<
+            P: IsA<Window>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkWindow,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Window>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1786,13 +1772,11 @@ impl<O: IsA<Window>> GtkWindowExt for O {
 
     #[doc(alias = "focus-widget")]
     fn connect_focus_widget_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_focus_widget_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_focus_widget_trampoline<P: IsA<Window>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkWindow,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Window>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1811,13 +1795,11 @@ impl<O: IsA<Window>> GtkWindowExt for O {
 
     #[doc(alias = "fullscreened")]
     fn connect_fullscreened_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_fullscreened_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_fullscreened_trampoline<P: IsA<Window>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkWindow,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Window>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1838,13 +1820,14 @@ impl<O: IsA<Window>> GtkWindowExt for O {
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v4_2")))]
     #[doc(alias = "handle-menubar-accel")]
     fn connect_handle_menubar_accel_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_handle_menubar_accel_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_handle_menubar_accel_trampoline<
+            P: IsA<Window>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkWindow,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Window>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1863,13 +1846,14 @@ impl<O: IsA<Window>> GtkWindowExt for O {
 
     #[doc(alias = "hide-on-close")]
     fn connect_hide_on_close_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_hide_on_close_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_hide_on_close_trampoline<
+            P: IsA<Window>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkWindow,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Window>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1888,13 +1872,11 @@ impl<O: IsA<Window>> GtkWindowExt for O {
 
     #[doc(alias = "icon-name")]
     fn connect_icon_name_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_icon_name_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_icon_name_trampoline<P: IsA<Window>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkWindow,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Window>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1913,13 +1895,11 @@ impl<O: IsA<Window>> GtkWindowExt for O {
 
     #[doc(alias = "is-active")]
     fn connect_is_active_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_is_active_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_is_active_trampoline<P: IsA<Window>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkWindow,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Window>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1938,13 +1918,11 @@ impl<O: IsA<Window>> GtkWindowExt for O {
 
     #[doc(alias = "maximized")]
     fn connect_maximized_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_maximized_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_maximized_trampoline<P: IsA<Window>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkWindow,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Window>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1963,13 +1941,14 @@ impl<O: IsA<Window>> GtkWindowExt for O {
 
     #[doc(alias = "mnemonics-visible")]
     fn connect_mnemonics_visible_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_mnemonics_visible_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_mnemonics_visible_trampoline<
+            P: IsA<Window>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkWindow,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Window>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1988,13 +1967,11 @@ impl<O: IsA<Window>> GtkWindowExt for O {
 
     #[doc(alias = "modal")]
     fn connect_modal_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_modal_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_modal_trampoline<P: IsA<Window>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkWindow,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Window>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -2013,13 +1990,11 @@ impl<O: IsA<Window>> GtkWindowExt for O {
 
     #[doc(alias = "resizable")]
     fn connect_resizable_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_resizable_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_resizable_trampoline<P: IsA<Window>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkWindow,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Window>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -2038,13 +2013,11 @@ impl<O: IsA<Window>> GtkWindowExt for O {
 
     #[doc(alias = "startup-id")]
     fn connect_startup_id_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_startup_id_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_startup_id_trampoline<P: IsA<Window>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkWindow,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Window>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -2063,13 +2036,11 @@ impl<O: IsA<Window>> GtkWindowExt for O {
 
     #[doc(alias = "title")]
     fn connect_title_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_title_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_title_trampoline<P: IsA<Window>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkWindow,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Window>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -2088,13 +2059,14 @@ impl<O: IsA<Window>> GtkWindowExt for O {
 
     #[doc(alias = "transient-for")]
     fn connect_transient_for_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_transient_for_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_transient_for_trampoline<
+            P: IsA<Window>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkWindow,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Window>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Window::from_glib_borrow(this).unsafe_cast_ref())
         }

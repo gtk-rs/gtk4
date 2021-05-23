@@ -37,7 +37,7 @@ impl ShortcutController {
 
     #[doc(alias = "gtk_shortcut_controller_new_for_model")]
     #[doc(alias = "new_for_model")]
-    pub fn for_model<P: IsA<gio::ListModel>>(model: &P) -> ShortcutController {
+    pub fn for_model(model: &impl IsA<gio::ListModel>) -> ShortcutController {
         assert_initialized_main_thread!();
         unsafe {
             EventController::from_glib_full(ffi::gtk_shortcut_controller_new_for_model(
@@ -139,7 +139,7 @@ impl ShortcutController {
     }
 
     #[doc(alias = "mnemonic-modifiers")]
-    pub fn connect_mnemonic_modifiers_notify<F: Fn(&ShortcutController) + 'static>(
+    pub fn connect_mnemonic_modifiers_notify<F: Fn(&Self) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -167,10 +167,7 @@ impl ShortcutController {
     }
 
     #[doc(alias = "scope")]
-    pub fn connect_scope_notify<F: Fn(&ShortcutController) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_scope_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_scope_trampoline<F: Fn(&ShortcutController) + 'static>(
             this: *mut ffi::GtkShortcutController,
             _param_spec: glib::ffi::gpointer,
@@ -249,7 +246,7 @@ impl ShortcutControllerBuilder {
         self
     }
 
-    pub fn model<P: IsA<gio::ListModel>>(mut self, model: &P) -> Self {
+    pub fn model(mut self, model: &impl IsA<gio::ListModel>) -> Self {
         self.model = Some(model.clone().upcast());
         self
     }

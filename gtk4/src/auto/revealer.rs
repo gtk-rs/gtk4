@@ -76,7 +76,7 @@ impl Revealer {
     }
 
     #[doc(alias = "gtk_revealer_set_child")]
-    pub fn set_child<P: IsA<Widget>>(&self, child: Option<&P>) {
+    pub fn set_child(&self, child: Option<&impl IsA<Widget>>) {
         unsafe {
             ffi::gtk_revealer_set_child(
                 self.to_glib_none().0,
@@ -107,7 +107,7 @@ impl Revealer {
     }
 
     #[doc(alias = "child")]
-    pub fn connect_child_notify<F: Fn(&Revealer) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_child_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_child_trampoline<F: Fn(&Revealer) + 'static>(
             this: *mut ffi::GtkRevealer,
             _param_spec: glib::ffi::gpointer,
@@ -130,10 +130,7 @@ impl Revealer {
     }
 
     #[doc(alias = "child-revealed")]
-    pub fn connect_child_revealed_notify<F: Fn(&Revealer) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_child_revealed_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_child_revealed_trampoline<F: Fn(&Revealer) + 'static>(
             this: *mut ffi::GtkRevealer,
             _param_spec: glib::ffi::gpointer,
@@ -156,7 +153,7 @@ impl Revealer {
     }
 
     #[doc(alias = "reveal-child")]
-    pub fn connect_reveal_child_notify<F: Fn(&Revealer) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_reveal_child_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_reveal_child_trampoline<F: Fn(&Revealer) + 'static>(
             this: *mut ffi::GtkRevealer,
             _param_spec: glib::ffi::gpointer,
@@ -179,7 +176,7 @@ impl Revealer {
     }
 
     #[doc(alias = "transition-duration")]
-    pub fn connect_transition_duration_notify<F: Fn(&Revealer) + 'static>(
+    pub fn connect_transition_duration_notify<F: Fn(&Self) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -205,10 +202,7 @@ impl Revealer {
     }
 
     #[doc(alias = "transition-type")]
-    pub fn connect_transition_type_notify<F: Fn(&Revealer) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_transition_type_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_transition_type_trampoline<F: Fn(&Revealer) + 'static>(
             this: *mut ffi::GtkRevealer,
             _param_spec: glib::ffi::gpointer,
@@ -394,7 +388,7 @@ impl RevealerBuilder {
             .expect("Failed to create an instance of Revealer")
     }
 
-    pub fn child<P: IsA<Widget>>(mut self, child: &P) -> Self {
+    pub fn child(mut self, child: &impl IsA<Widget>) -> Self {
         self.child = Some(child.clone().upcast());
         self
     }
@@ -474,7 +468,7 @@ impl RevealerBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }

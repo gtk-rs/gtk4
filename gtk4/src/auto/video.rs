@@ -40,7 +40,7 @@ impl Video {
 
     #[doc(alias = "gtk_video_new_for_file")]
     #[doc(alias = "new_for_file")]
-    pub fn for_file<P: IsA<gio::File>>(file: Option<&P>) -> Video {
+    pub fn for_file(file: Option<&impl IsA<gio::File>>) -> Video {
         assert_initialized_main_thread!();
         unsafe {
             Widget::from_glib_none(ffi::gtk_video_new_for_file(
@@ -52,7 +52,7 @@ impl Video {
 
     #[doc(alias = "gtk_video_new_for_filename")]
     #[doc(alias = "new_for_filename")]
-    pub fn for_filename<P: AsRef<std::path::Path>>(filename: P) -> Video {
+    pub fn for_filename(filename: impl AsRef<std::path::Path>) -> Video {
         assert_initialized_main_thread!();
         unsafe {
             Widget::from_glib_none(ffi::gtk_video_new_for_filename(
@@ -64,7 +64,7 @@ impl Video {
 
     #[doc(alias = "gtk_video_new_for_media_stream")]
     #[doc(alias = "new_for_media_stream")]
-    pub fn for_media_stream<P: IsA<MediaStream>>(stream: Option<&P>) -> Video {
+    pub fn for_media_stream(stream: Option<&impl IsA<MediaStream>>) -> Video {
         assert_initialized_main_thread!();
         unsafe {
             Widget::from_glib_none(ffi::gtk_video_new_for_media_stream(
@@ -125,7 +125,7 @@ impl Video {
     }
 
     #[doc(alias = "gtk_video_set_file")]
-    pub fn set_file<P: IsA<gio::File>>(&self, file: Option<&P>) {
+    pub fn set_file(&self, file: Option<&impl IsA<gio::File>>) {
         unsafe {
             ffi::gtk_video_set_file(
                 self.to_glib_none().0,
@@ -149,7 +149,7 @@ impl Video {
     }
 
     #[doc(alias = "gtk_video_set_media_stream")]
-    pub fn set_media_stream<P: IsA<MediaStream>>(&self, stream: Option<&P>) {
+    pub fn set_media_stream(&self, stream: Option<&impl IsA<MediaStream>>) {
         unsafe {
             ffi::gtk_video_set_media_stream(
                 self.to_glib_none().0,
@@ -166,7 +166,7 @@ impl Video {
     }
 
     #[doc(alias = "autoplay")]
-    pub fn connect_autoplay_notify<F: Fn(&Video) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_autoplay_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_autoplay_trampoline<F: Fn(&Video) + 'static>(
             this: *mut ffi::GtkVideo,
             _param_spec: glib::ffi::gpointer,
@@ -189,7 +189,7 @@ impl Video {
     }
 
     #[doc(alias = "file")]
-    pub fn connect_file_notify<F: Fn(&Video) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_file_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_file_trampoline<F: Fn(&Video) + 'static>(
             this: *mut ffi::GtkVideo,
             _param_spec: glib::ffi::gpointer,
@@ -212,7 +212,7 @@ impl Video {
     }
 
     #[doc(alias = "loop")]
-    pub fn connect_loop_notify<F: Fn(&Video) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_loop_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_loop_trampoline<F: Fn(&Video) + 'static>(
             this: *mut ffi::GtkVideo,
             _param_spec: glib::ffi::gpointer,
@@ -235,7 +235,7 @@ impl Video {
     }
 
     #[doc(alias = "media-stream")]
-    pub fn connect_media_stream_notify<F: Fn(&Video) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_media_stream_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_media_stream_trampoline<F: Fn(&Video) + 'static>(
             this: *mut ffi::GtkVideo,
             _param_spec: glib::ffi::gpointer,
@@ -425,7 +425,7 @@ impl VideoBuilder {
         self
     }
 
-    pub fn file<P: IsA<gio::File>>(mut self, file: &P) -> Self {
+    pub fn file(mut self, file: &impl IsA<gio::File>) -> Self {
         self.file = Some(file.clone().upcast());
         self
     }
@@ -435,7 +435,7 @@ impl VideoBuilder {
         self
     }
 
-    pub fn media_stream<P: IsA<MediaStream>>(mut self, media_stream: &P) -> Self {
+    pub fn media_stream(mut self, media_stream: &impl IsA<MediaStream>) -> Self {
         self.media_stream = Some(media_stream.clone().upcast());
         self
     }
@@ -500,7 +500,7 @@ impl VideoBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }

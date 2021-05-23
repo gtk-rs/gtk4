@@ -49,7 +49,7 @@ impl InfoBar {
     }
 
     #[doc(alias = "gtk_info_bar_add_action_widget")]
-    pub fn add_action_widget<P: IsA<Widget>>(&self, child: &P, response_id: ResponseType) {
+    pub fn add_action_widget(&self, child: &impl IsA<Widget>, response_id: ResponseType) {
         unsafe {
             ffi::gtk_info_bar_add_action_widget(
                 self.to_glib_none().0,
@@ -71,7 +71,7 @@ impl InfoBar {
     }
 
     #[doc(alias = "gtk_info_bar_add_child")]
-    pub fn add_child<P: IsA<Widget>>(&self, widget: &P) {
+    pub fn add_child(&self, widget: &impl IsA<Widget>) {
         unsafe {
             ffi::gtk_info_bar_add_child(self.to_glib_none().0, widget.as_ref().to_glib_none().0);
         }
@@ -100,7 +100,7 @@ impl InfoBar {
     }
 
     #[doc(alias = "gtk_info_bar_remove_action_widget")]
-    pub fn remove_action_widget<P: IsA<Widget>>(&self, widget: &P) {
+    pub fn remove_action_widget(&self, widget: &impl IsA<Widget>) {
         unsafe {
             ffi::gtk_info_bar_remove_action_widget(
                 self.to_glib_none().0,
@@ -110,7 +110,7 @@ impl InfoBar {
     }
 
     #[doc(alias = "gtk_info_bar_remove_child")]
-    pub fn remove_child<P: IsA<Widget>>(&self, widget: &P) {
+    pub fn remove_child(&self, widget: &impl IsA<Widget>) {
         unsafe {
             ffi::gtk_info_bar_remove_child(self.to_glib_none().0, widget.as_ref().to_glib_none().0);
         }
@@ -163,7 +163,7 @@ impl InfoBar {
     }
 
     #[doc(alias = "close")]
-    pub fn connect_close<F: Fn(&InfoBar) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_close<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn close_trampoline<F: Fn(&InfoBar) + 'static>(
             this: *mut ffi::GtkInfoBar,
             f: glib::ffi::gpointer,
@@ -193,10 +193,7 @@ impl InfoBar {
     }
 
     #[doc(alias = "response")]
-    pub fn connect_response<F: Fn(&InfoBar, ResponseType) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_response<F: Fn(&Self, ResponseType) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn response_trampoline<F: Fn(&InfoBar, ResponseType) + 'static>(
             this: *mut ffi::GtkInfoBar,
             response_id: ffi::GtkResponseType,
@@ -219,7 +216,7 @@ impl InfoBar {
     }
 
     #[doc(alias = "message-type")]
-    pub fn connect_message_type_notify<F: Fn(&InfoBar) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_message_type_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_message_type_trampoline<F: Fn(&InfoBar) + 'static>(
             this: *mut ffi::GtkInfoBar,
             _param_spec: glib::ffi::gpointer,
@@ -242,7 +239,7 @@ impl InfoBar {
     }
 
     #[doc(alias = "revealed")]
-    pub fn connect_revealed_notify<F: Fn(&InfoBar) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_revealed_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_revealed_trampoline<F: Fn(&InfoBar) + 'static>(
             this: *mut ffi::GtkInfoBar,
             _param_spec: glib::ffi::gpointer,
@@ -265,7 +262,7 @@ impl InfoBar {
     }
 
     #[doc(alias = "show-close-button")]
-    pub fn connect_show_close_button_notify<F: Fn(&InfoBar) + 'static>(
+    pub fn connect_show_close_button_notify<F: Fn(&Self) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -524,7 +521,7 @@ impl InfoBarBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }

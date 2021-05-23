@@ -36,9 +36,9 @@ pub const NONE_CELL_RENDERER: Option<&CellRenderer> = None;
 pub trait CellRendererExt: 'static {
     #[doc(alias = "gtk_cell_renderer_get_aligned_area")]
     #[doc(alias = "get_aligned_area")]
-    fn aligned_area<P: IsA<Widget>>(
+    fn aligned_area(
         &self,
-        widget: &P,
+        widget: &impl IsA<Widget>,
         flags: CellRendererState,
         cell_area: &gdk::Rectangle,
     ) -> gdk::Rectangle;
@@ -65,23 +65,23 @@ pub trait CellRendererExt: 'static {
 
     #[doc(alias = "gtk_cell_renderer_get_preferred_height")]
     #[doc(alias = "get_preferred_height")]
-    fn preferred_height<P: IsA<Widget>>(&self, widget: &P) -> (i32, i32);
+    fn preferred_height(&self, widget: &impl IsA<Widget>) -> (i32, i32);
 
     #[doc(alias = "gtk_cell_renderer_get_preferred_height_for_width")]
     #[doc(alias = "get_preferred_height_for_width")]
-    fn preferred_height_for_width<P: IsA<Widget>>(&self, widget: &P, width: i32) -> (i32, i32);
+    fn preferred_height_for_width(&self, widget: &impl IsA<Widget>, width: i32) -> (i32, i32);
 
     #[doc(alias = "gtk_cell_renderer_get_preferred_size")]
     #[doc(alias = "get_preferred_size")]
-    fn preferred_size<P: IsA<Widget>>(&self, widget: &P) -> (Requisition, Requisition);
+    fn preferred_size(&self, widget: &impl IsA<Widget>) -> (Requisition, Requisition);
 
     #[doc(alias = "gtk_cell_renderer_get_preferred_width")]
     #[doc(alias = "get_preferred_width")]
-    fn preferred_width<P: IsA<Widget>>(&self, widget: &P) -> (i32, i32);
+    fn preferred_width(&self, widget: &impl IsA<Widget>) -> (i32, i32);
 
     #[doc(alias = "gtk_cell_renderer_get_preferred_width_for_height")]
     #[doc(alias = "get_preferred_width_for_height")]
-    fn preferred_width_for_height<P: IsA<Widget>>(&self, widget: &P, height: i32) -> (i32, i32);
+    fn preferred_width_for_height(&self, widget: &impl IsA<Widget>, height: i32) -> (i32, i32);
 
     #[doc(alias = "gtk_cell_renderer_get_request_mode")]
     #[doc(alias = "get_request_mode")]
@@ -93,11 +93,8 @@ pub trait CellRendererExt: 'static {
 
     #[doc(alias = "gtk_cell_renderer_get_state")]
     #[doc(alias = "get_state")]
-    fn state<P: IsA<Widget>>(
-        &self,
-        widget: Option<&P>,
-        cell_state: CellRendererState,
-    ) -> StateFlags;
+    fn state(&self, widget: Option<&impl IsA<Widget>>, cell_state: CellRendererState)
+        -> StateFlags;
 
     #[doc(alias = "gtk_cell_renderer_get_visible")]
     #[doc(alias = "get_visible")]
@@ -128,10 +125,10 @@ pub trait CellRendererExt: 'static {
     fn set_visible(&self, visible: bool);
 
     #[doc(alias = "gtk_cell_renderer_snapshot")]
-    fn snapshot<P: IsA<Widget>>(
+    fn snapshot(
         &self,
         snapshot: &Snapshot,
-        widget: &P,
+        widget: &impl IsA<Widget>,
         background_area: &gdk::Rectangle,
         cell_area: &gdk::Rectangle,
         flags: CellRendererState,
@@ -241,9 +238,9 @@ pub trait CellRendererExt: 'static {
 }
 
 impl<O: IsA<CellRenderer>> CellRendererExt for O {
-    fn aligned_area<P: IsA<Widget>>(
+    fn aligned_area(
         &self,
-        widget: &P,
+        widget: &impl IsA<Widget>,
         flags: CellRendererState,
         cell_area: &gdk::Rectangle,
     ) -> gdk::Rectangle {
@@ -321,7 +318,7 @@ impl<O: IsA<CellRenderer>> CellRendererExt for O {
         }
     }
 
-    fn preferred_height<P: IsA<Widget>>(&self, widget: &P) -> (i32, i32) {
+    fn preferred_height(&self, widget: &impl IsA<Widget>) -> (i32, i32) {
         unsafe {
             let mut minimum_size = mem::MaybeUninit::uninit();
             let mut natural_size = mem::MaybeUninit::uninit();
@@ -337,7 +334,7 @@ impl<O: IsA<CellRenderer>> CellRendererExt for O {
         }
     }
 
-    fn preferred_height_for_width<P: IsA<Widget>>(&self, widget: &P, width: i32) -> (i32, i32) {
+    fn preferred_height_for_width(&self, widget: &impl IsA<Widget>, width: i32) -> (i32, i32) {
         unsafe {
             let mut minimum_height = mem::MaybeUninit::uninit();
             let mut natural_height = mem::MaybeUninit::uninit();
@@ -354,7 +351,7 @@ impl<O: IsA<CellRenderer>> CellRendererExt for O {
         }
     }
 
-    fn preferred_size<P: IsA<Widget>>(&self, widget: &P) -> (Requisition, Requisition) {
+    fn preferred_size(&self, widget: &impl IsA<Widget>) -> (Requisition, Requisition) {
         unsafe {
             let mut minimum_size = Requisition::uninitialized();
             let mut natural_size = Requisition::uninitialized();
@@ -368,7 +365,7 @@ impl<O: IsA<CellRenderer>> CellRendererExt for O {
         }
     }
 
-    fn preferred_width<P: IsA<Widget>>(&self, widget: &P) -> (i32, i32) {
+    fn preferred_width(&self, widget: &impl IsA<Widget>) -> (i32, i32) {
         unsafe {
             let mut minimum_size = mem::MaybeUninit::uninit();
             let mut natural_size = mem::MaybeUninit::uninit();
@@ -384,7 +381,7 @@ impl<O: IsA<CellRenderer>> CellRendererExt for O {
         }
     }
 
-    fn preferred_width_for_height<P: IsA<Widget>>(&self, widget: &P, height: i32) -> (i32, i32) {
+    fn preferred_width_for_height(&self, widget: &impl IsA<Widget>, height: i32) -> (i32, i32) {
         unsafe {
             let mut minimum_width = mem::MaybeUninit::uninit();
             let mut natural_width = mem::MaybeUninit::uninit();
@@ -417,9 +414,9 @@ impl<O: IsA<CellRenderer>> CellRendererExt for O {
         }
     }
 
-    fn state<P: IsA<Widget>>(
+    fn state(
         &self,
-        widget: Option<&P>,
+        widget: Option<&impl IsA<Widget>>,
         cell_state: CellRendererState,
     ) -> StateFlags {
         unsafe {
@@ -498,10 +495,10 @@ impl<O: IsA<CellRenderer>> CellRendererExt for O {
         }
     }
 
-    fn snapshot<P: IsA<Widget>>(
+    fn snapshot(
         &self,
         snapshot: &Snapshot,
-        widget: &P,
+        widget: &impl IsA<Widget>,
         background_area: &gdk::Rectangle,
         cell_area: &gdk::Rectangle,
         flags: CellRendererState,
@@ -769,12 +766,13 @@ impl<O: IsA<CellRenderer>> CellRendererExt for O {
 
     #[doc(alias = "editing-canceled")]
     fn connect_editing_canceled<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn editing_canceled_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn editing_canceled_trampoline<
+            P: IsA<CellRenderer>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkCellRenderer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<CellRenderer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&CellRenderer::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -797,16 +795,14 @@ impl<O: IsA<CellRenderer>> CellRendererExt for O {
         f: F,
     ) -> SignalHandlerId {
         unsafe extern "C" fn editing_started_trampoline<
-            P,
+            P: IsA<CellRenderer>,
             F: Fn(&P, &CellEditable, TreePath) + 'static,
         >(
             this: *mut ffi::GtkCellRenderer,
             editable: *mut ffi::GtkCellEditable,
             path: *mut libc::c_char,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<CellRenderer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             let path = from_glib_full(crate::ffi::gtk_tree_path_new_from_string(path));
             f(
@@ -830,13 +826,14 @@ impl<O: IsA<CellRenderer>> CellRendererExt for O {
 
     #[doc(alias = "cell-background")]
     fn connect_cell_background_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_cell_background_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_cell_background_trampoline<
+            P: IsA<CellRenderer>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkCellRenderer,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<CellRenderer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&CellRenderer::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -855,13 +852,14 @@ impl<O: IsA<CellRenderer>> CellRendererExt for O {
 
     #[doc(alias = "cell-background-rgba")]
     fn connect_cell_background_rgba_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_cell_background_rgba_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_cell_background_rgba_trampoline<
+            P: IsA<CellRenderer>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkCellRenderer,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<CellRenderer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&CellRenderer::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -880,13 +878,14 @@ impl<O: IsA<CellRenderer>> CellRendererExt for O {
 
     #[doc(alias = "cell-background-set")]
     fn connect_cell_background_set_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_cell_background_set_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_cell_background_set_trampoline<
+            P: IsA<CellRenderer>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkCellRenderer,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<CellRenderer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&CellRenderer::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -905,13 +904,14 @@ impl<O: IsA<CellRenderer>> CellRendererExt for O {
 
     #[doc(alias = "editing")]
     fn connect_editing_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_editing_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_editing_trampoline<
+            P: IsA<CellRenderer>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkCellRenderer,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<CellRenderer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&CellRenderer::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -930,13 +930,11 @@ impl<O: IsA<CellRenderer>> CellRendererExt for O {
 
     #[doc(alias = "height")]
     fn connect_height_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_height_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_height_trampoline<P: IsA<CellRenderer>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkCellRenderer,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<CellRenderer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&CellRenderer::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -955,13 +953,14 @@ impl<O: IsA<CellRenderer>> CellRendererExt for O {
 
     #[doc(alias = "is-expanded")]
     fn connect_is_expanded_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_is_expanded_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_is_expanded_trampoline<
+            P: IsA<CellRenderer>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkCellRenderer,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<CellRenderer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&CellRenderer::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -980,13 +979,14 @@ impl<O: IsA<CellRenderer>> CellRendererExt for O {
 
     #[doc(alias = "is-expander")]
     fn connect_is_expander_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_is_expander_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_is_expander_trampoline<
+            P: IsA<CellRenderer>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkCellRenderer,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<CellRenderer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&CellRenderer::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1005,13 +1005,11 @@ impl<O: IsA<CellRenderer>> CellRendererExt for O {
 
     #[doc(alias = "mode")]
     fn connect_mode_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_mode_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_mode_trampoline<P: IsA<CellRenderer>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkCellRenderer,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<CellRenderer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&CellRenderer::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1030,13 +1028,14 @@ impl<O: IsA<CellRenderer>> CellRendererExt for O {
 
     #[doc(alias = "sensitive")]
     fn connect_sensitive_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_sensitive_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_sensitive_trampoline<
+            P: IsA<CellRenderer>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkCellRenderer,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<CellRenderer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&CellRenderer::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1055,13 +1054,14 @@ impl<O: IsA<CellRenderer>> CellRendererExt for O {
 
     #[doc(alias = "visible")]
     fn connect_visible_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_visible_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_visible_trampoline<
+            P: IsA<CellRenderer>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkCellRenderer,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<CellRenderer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&CellRenderer::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1080,13 +1080,11 @@ impl<O: IsA<CellRenderer>> CellRendererExt for O {
 
     #[doc(alias = "width")]
     fn connect_width_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_width_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_width_trampoline<P: IsA<CellRenderer>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkCellRenderer,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<CellRenderer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&CellRenderer::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1105,13 +1103,11 @@ impl<O: IsA<CellRenderer>> CellRendererExt for O {
 
     #[doc(alias = "xalign")]
     fn connect_xalign_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_xalign_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_xalign_trampoline<P: IsA<CellRenderer>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkCellRenderer,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<CellRenderer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&CellRenderer::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1130,13 +1126,11 @@ impl<O: IsA<CellRenderer>> CellRendererExt for O {
 
     #[doc(alias = "xpad")]
     fn connect_xpad_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_xpad_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_xpad_trampoline<P: IsA<CellRenderer>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkCellRenderer,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<CellRenderer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&CellRenderer::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1155,13 +1149,11 @@ impl<O: IsA<CellRenderer>> CellRendererExt for O {
 
     #[doc(alias = "yalign")]
     fn connect_yalign_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_yalign_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_yalign_trampoline<P: IsA<CellRenderer>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkCellRenderer,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<CellRenderer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&CellRenderer::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1180,13 +1172,11 @@ impl<O: IsA<CellRenderer>> CellRendererExt for O {
 
     #[doc(alias = "ypad")]
     fn connect_ypad_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_ypad_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_ypad_trampoline<P: IsA<CellRenderer>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkCellRenderer,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<CellRenderer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&CellRenderer::from_glib_borrow(this).unsafe_cast_ref())
         }

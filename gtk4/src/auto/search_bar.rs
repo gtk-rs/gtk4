@@ -46,7 +46,7 @@ impl SearchBar {
     }
 
     #[doc(alias = "gtk_search_bar_connect_entry")]
-    pub fn connect_entry<P: IsA<Editable>>(&self, entry: &P) {
+    pub fn connect_entry(&self, entry: &impl IsA<Editable>) {
         unsafe {
             ffi::gtk_search_bar_connect_entry(
                 self.to_glib_none().0,
@@ -88,7 +88,7 @@ impl SearchBar {
     }
 
     #[doc(alias = "gtk_search_bar_set_child")]
-    pub fn set_child<P: IsA<Widget>>(&self, child: Option<&P>) {
+    pub fn set_child(&self, child: Option<&impl IsA<Widget>>) {
         unsafe {
             ffi::gtk_search_bar_set_child(
                 self.to_glib_none().0,
@@ -98,7 +98,7 @@ impl SearchBar {
     }
 
     #[doc(alias = "gtk_search_bar_set_key_capture_widget")]
-    pub fn set_key_capture_widget<P: IsA<Widget>>(&self, widget: Option<&P>) {
+    pub fn set_key_capture_widget(&self, widget: Option<&impl IsA<Widget>>) {
         unsafe {
             ffi::gtk_search_bar_set_key_capture_widget(
                 self.to_glib_none().0,
@@ -122,7 +122,7 @@ impl SearchBar {
     }
 
     #[doc(alias = "child")]
-    pub fn connect_child_notify<F: Fn(&SearchBar) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_child_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_child_trampoline<F: Fn(&SearchBar) + 'static>(
             this: *mut ffi::GtkSearchBar,
             _param_spec: glib::ffi::gpointer,
@@ -145,7 +145,7 @@ impl SearchBar {
     }
 
     #[doc(alias = "key-capture-widget")]
-    pub fn connect_key_capture_widget_notify<F: Fn(&SearchBar) + 'static>(
+    pub fn connect_key_capture_widget_notify<F: Fn(&Self) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -171,7 +171,7 @@ impl SearchBar {
     }
 
     #[doc(alias = "search-mode-enabled")]
-    pub fn connect_search_mode_enabled_notify<F: Fn(&SearchBar) + 'static>(
+    pub fn connect_search_mode_enabled_notify<F: Fn(&Self) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -197,7 +197,7 @@ impl SearchBar {
     }
 
     #[doc(alias = "show-close-button")]
-    pub fn connect_show_close_button_notify<F: Fn(&SearchBar) + 'static>(
+    pub fn connect_show_close_button_notify<F: Fn(&Self) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -386,12 +386,12 @@ impl SearchBarBuilder {
             .expect("Failed to create an instance of SearchBar")
     }
 
-    pub fn child<P: IsA<Widget>>(mut self, child: &P) -> Self {
+    pub fn child(mut self, child: &impl IsA<Widget>) -> Self {
         self.child = Some(child.clone().upcast());
         self
     }
 
-    pub fn key_capture_widget<P: IsA<Widget>>(mut self, key_capture_widget: &P) -> Self {
+    pub fn key_capture_widget(mut self, key_capture_widget: &impl IsA<Widget>) -> Self {
         self.key_capture_widget = Some(key_capture_widget.clone().upcast());
         self
     }
@@ -466,7 +466,7 @@ impl SearchBarBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }

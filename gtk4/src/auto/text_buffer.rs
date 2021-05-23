@@ -94,13 +94,13 @@ pub const NONE_TEXT_BUFFER: Option<&TextBuffer> = None;
 
 pub trait TextBufferExt: 'static {
     #[doc(alias = "gtk_text_buffer_add_mark")]
-    fn add_mark<P: IsA<TextMark>>(&self, mark: &P, where_: &TextIter);
+    fn add_mark(&self, mark: &impl IsA<TextMark>, where_: &TextIter);
 
     #[doc(alias = "gtk_text_buffer_add_selection_clipboard")]
     fn add_selection_clipboard(&self, clipboard: &gdk::Clipboard);
 
     #[doc(alias = "gtk_text_buffer_apply_tag")]
-    fn apply_tag<P: IsA<TextTag>>(&self, tag: &P, start: &TextIter, end: &TextIter);
+    fn apply_tag(&self, tag: &impl IsA<TextTag>, start: &TextIter, end: &TextIter);
 
     #[doc(alias = "gtk_text_buffer_apply_tag_by_name")]
     fn apply_tag_by_name(&self, name: &str, start: &TextIter, end: &TextIter);
@@ -146,7 +146,7 @@ pub trait TextBufferExt: 'static {
     ) -> bool;
 
     #[doc(alias = "gtk_text_buffer_delete_mark")]
-    fn delete_mark<P: IsA<TextMark>>(&self, mark: &P);
+    fn delete_mark(&self, mark: &impl IsA<TextMark>);
 
     #[doc(alias = "gtk_text_buffer_delete_mark_by_name")]
     fn delete_mark_by_name(&self, name: &str);
@@ -193,7 +193,7 @@ pub trait TextBufferExt: 'static {
 
     #[doc(alias = "gtk_text_buffer_get_iter_at_child_anchor")]
     #[doc(alias = "get_iter_at_child_anchor")]
-    fn iter_at_child_anchor<P: IsA<TextChildAnchor>>(&self, anchor: &P) -> TextIter;
+    fn iter_at_child_anchor(&self, anchor: &impl IsA<TextChildAnchor>) -> TextIter;
 
     #[doc(alias = "gtk_text_buffer_get_iter_at_line")]
     #[doc(alias = "get_iter_at_line")]
@@ -209,7 +209,7 @@ pub trait TextBufferExt: 'static {
 
     #[doc(alias = "gtk_text_buffer_get_iter_at_mark")]
     #[doc(alias = "get_iter_at_mark")]
-    fn iter_at_mark<P: IsA<TextMark>>(&self, mark: &P) -> TextIter;
+    fn iter_at_mark(&self, mark: &impl IsA<TextMark>) -> TextIter;
 
     #[doc(alias = "gtk_text_buffer_get_iter_at_offset")]
     #[doc(alias = "get_iter_at_offset")]
@@ -266,7 +266,7 @@ pub trait TextBufferExt: 'static {
     fn insert_at_cursor(&self, text: &str);
 
     #[doc(alias = "gtk_text_buffer_insert_child_anchor")]
-    fn insert_child_anchor<P: IsA<TextChildAnchor>>(&self, iter: &mut TextIter, anchor: &P);
+    fn insert_child_anchor(&self, iter: &mut TextIter, anchor: &impl IsA<TextChildAnchor>);
 
     #[doc(alias = "gtk_text_buffer_insert_interactive")]
     fn insert_interactive(&self, iter: &mut TextIter, text: &str, default_editable: bool) -> bool;
@@ -278,7 +278,7 @@ pub trait TextBufferExt: 'static {
     fn insert_markup(&self, iter: &mut TextIter, markup: &str);
 
     #[doc(alias = "gtk_text_buffer_insert_paintable")]
-    fn insert_paintable<P: IsA<gdk::Paintable>>(&self, iter: &mut TextIter, paintable: &P);
+    fn insert_paintable(&self, iter: &mut TextIter, paintable: &impl IsA<gdk::Paintable>);
 
     #[doc(alias = "gtk_text_buffer_insert_range")]
     fn insert_range(&self, iter: &mut TextIter, start: &TextIter, end: &TextIter);
@@ -293,13 +293,13 @@ pub trait TextBufferExt: 'static {
     ) -> bool;
 
     //#[doc(alias = "gtk_text_buffer_insert_with_tags")]
-    //fn insert_with_tags<P: IsA<TextTag>>(&self, iter: &mut TextIter, text: &str, first_tag: &P, : /*Unknown conversion*//*Unimplemented*/Fundamental: VarArgs);
+    //fn insert_with_tags(&self, iter: &mut TextIter, text: &str, first_tag: &impl IsA<TextTag>, : /*Unknown conversion*//*Unimplemented*/Fundamental: VarArgs);
 
     //#[doc(alias = "gtk_text_buffer_insert_with_tags_by_name")]
     //fn insert_with_tags_by_name(&self, iter: &mut TextIter, text: &str, first_tag_name: &str, : /*Unknown conversion*//*Unimplemented*/Fundamental: VarArgs);
 
     #[doc(alias = "gtk_text_buffer_move_mark")]
-    fn move_mark<P: IsA<TextMark>>(&self, mark: &P, where_: &TextIter);
+    fn move_mark(&self, mark: &impl IsA<TextMark>, where_: &TextIter);
 
     #[doc(alias = "gtk_text_buffer_move_mark_by_name")]
     fn move_mark_by_name(&self, name: &str, where_: &TextIter);
@@ -325,7 +325,7 @@ pub trait TextBufferExt: 'static {
     fn remove_selection_clipboard(&self, clipboard: &gdk::Clipboard);
 
     #[doc(alias = "gtk_text_buffer_remove_tag")]
-    fn remove_tag<P: IsA<TextTag>>(&self, tag: &P, start: &TextIter, end: &TextIter);
+    fn remove_tag(&self, tag: &impl IsA<TextTag>, start: &TextIter, end: &TextIter);
 
     #[doc(alias = "gtk_text_buffer_remove_tag_by_name")]
     fn remove_tag_by_name(&self, name: &str, start: &TextIter, end: &TextIter);
@@ -431,7 +431,7 @@ pub trait TextBufferExt: 'static {
 }
 
 impl<O: IsA<TextBuffer>> TextBufferExt for O {
-    fn add_mark<P: IsA<TextMark>>(&self, mark: &P, where_: &TextIter) {
+    fn add_mark(&self, mark: &impl IsA<TextMark>, where_: &TextIter) {
         unsafe {
             ffi::gtk_text_buffer_add_mark(
                 self.as_ref().to_glib_none().0,
@@ -450,7 +450,7 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
         }
     }
 
-    fn apply_tag<P: IsA<TextTag>>(&self, tag: &P, start: &TextIter, end: &TextIter) {
+    fn apply_tag(&self, tag: &impl IsA<TextTag>, start: &TextIter, end: &TextIter) {
         unsafe {
             ffi::gtk_text_buffer_apply_tag(
                 self.as_ref().to_glib_none().0,
@@ -569,7 +569,7 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
         }
     }
 
-    fn delete_mark<P: IsA<TextMark>>(&self, mark: &P) {
+    fn delete_mark(&self, mark: &impl IsA<TextMark>) {
         unsafe {
             ffi::gtk_text_buffer_delete_mark(
                 self.as_ref().to_glib_none().0,
@@ -677,7 +677,7 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
         }
     }
 
-    fn iter_at_child_anchor<P: IsA<TextChildAnchor>>(&self, anchor: &P) -> TextIter {
+    fn iter_at_child_anchor(&self, anchor: &impl IsA<TextChildAnchor>) -> TextIter {
         unsafe {
             let mut iter = TextIter::uninitialized();
             ffi::gtk_text_buffer_get_iter_at_child_anchor(
@@ -739,7 +739,7 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
         }
     }
 
-    fn iter_at_mark<P: IsA<TextMark>>(&self, mark: &P) -> TextIter {
+    fn iter_at_mark(&self, mark: &impl IsA<TextMark>) -> TextIter {
         unsafe {
             let mut iter = TextIter::uninitialized();
             ffi::gtk_text_buffer_get_iter_at_mark(
@@ -885,7 +885,7 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
         }
     }
 
-    fn insert_child_anchor<P: IsA<TextChildAnchor>>(&self, iter: &mut TextIter, anchor: &P) {
+    fn insert_child_anchor(&self, iter: &mut TextIter, anchor: &impl IsA<TextChildAnchor>) {
         unsafe {
             ffi::gtk_text_buffer_insert_child_anchor(
                 self.as_ref().to_glib_none().0,
@@ -932,7 +932,7 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
         }
     }
 
-    fn insert_paintable<P: IsA<gdk::Paintable>>(&self, iter: &mut TextIter, paintable: &P) {
+    fn insert_paintable(&self, iter: &mut TextIter, paintable: &impl IsA<gdk::Paintable>) {
         unsafe {
             ffi::gtk_text_buffer_insert_paintable(
                 self.as_ref().to_glib_none().0,
@@ -971,7 +971,7 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
         }
     }
 
-    //fn insert_with_tags<P: IsA<TextTag>>(&self, iter: &mut TextIter, text: &str, first_tag: &P, : /*Unknown conversion*//*Unimplemented*/Fundamental: VarArgs) {
+    //fn insert_with_tags(&self, iter: &mut TextIter, text: &str, first_tag: &impl IsA<TextTag>, : /*Unknown conversion*//*Unimplemented*/Fundamental: VarArgs) {
     //    unsafe { TODO: call ffi:gtk_text_buffer_insert_with_tags() }
     //}
 
@@ -979,7 +979,7 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
     //    unsafe { TODO: call ffi:gtk_text_buffer_insert_with_tags_by_name() }
     //}
 
-    fn move_mark<P: IsA<TextMark>>(&self, mark: &P, where_: &TextIter) {
+    fn move_mark(&self, mark: &impl IsA<TextMark>, where_: &TextIter) {
         unsafe {
             ffi::gtk_text_buffer_move_mark(
                 self.as_ref().to_glib_none().0,
@@ -1049,7 +1049,7 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
         }
     }
 
-    fn remove_tag<P: IsA<TextTag>>(&self, tag: &P, start: &TextIter, end: &TextIter) {
+    fn remove_tag(&self, tag: &impl IsA<TextTag>, start: &TextIter, end: &TextIter) {
         unsafe {
             ffi::gtk_text_buffer_remove_tag(
                 self.as_ref().to_glib_none().0,
@@ -1142,7 +1142,7 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
         f: F,
     ) -> SignalHandlerId {
         unsafe extern "C" fn apply_tag_trampoline<
-            P,
+            P: IsA<TextBuffer>,
             F: Fn(&P, &TextTag, &TextIter, &TextIter) + 'static,
         >(
             this: *mut ffi::GtkTextBuffer,
@@ -1150,9 +1150,7 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
             start: *mut ffi::GtkTextIter,
             end: *mut ffi::GtkTextIter,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<TextBuffer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(
                 &TextBuffer::from_glib_borrow(this).unsafe_cast_ref(),
@@ -1176,12 +1174,13 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
 
     #[doc(alias = "begin-user-action")]
     fn connect_begin_user_action<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn begin_user_action_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn begin_user_action_trampoline<
+            P: IsA<TextBuffer>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkTextBuffer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<TextBuffer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&TextBuffer::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1200,12 +1199,10 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
 
     #[doc(alias = "changed")]
     fn connect_changed<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn changed_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn changed_trampoline<P: IsA<TextBuffer>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkTextBuffer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<TextBuffer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&TextBuffer::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1227,14 +1224,15 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
         &self,
         f: F,
     ) -> SignalHandlerId {
-        unsafe extern "C" fn delete_range_trampoline<P, F: Fn(&P, &TextIter, &TextIter) + 'static>(
+        unsafe extern "C" fn delete_range_trampoline<
+            P: IsA<TextBuffer>,
+            F: Fn(&P, &TextIter, &TextIter) + 'static,
+        >(
             this: *mut ffi::GtkTextBuffer,
             start: *mut ffi::GtkTextIter,
             end: *mut ffi::GtkTextIter,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<TextBuffer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(
                 &TextBuffer::from_glib_borrow(this).unsafe_cast_ref(),
@@ -1257,12 +1255,10 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
 
     #[doc(alias = "end-user-action")]
     fn connect_end_user_action<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn end_user_action_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn end_user_action_trampoline<P: IsA<TextBuffer>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkTextBuffer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<TextBuffer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&TextBuffer::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1285,16 +1281,14 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
         f: F,
     ) -> SignalHandlerId {
         unsafe extern "C" fn insert_child_anchor_trampoline<
-            P,
+            P: IsA<TextBuffer>,
             F: Fn(&P, &TextIter, &TextChildAnchor) + 'static,
         >(
             this: *mut ffi::GtkTextBuffer,
             location: *mut ffi::GtkTextIter,
             anchor: *mut ffi::GtkTextChildAnchor,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<TextBuffer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(
                 &TextBuffer::from_glib_borrow(this).unsafe_cast_ref(),
@@ -1321,16 +1315,14 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
         f: F,
     ) -> SignalHandlerId {
         unsafe extern "C" fn insert_paintable_trampoline<
-            P,
+            P: IsA<TextBuffer>,
             F: Fn(&P, &TextIter, &gdk::Paintable) + 'static,
         >(
             this: *mut ffi::GtkTextBuffer,
             location: *mut ffi::GtkTextIter,
             paintable: *mut gdk::ffi::GdkPaintable,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<TextBuffer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(
                 &TextBuffer::from_glib_borrow(this).unsafe_cast_ref(),
@@ -1353,13 +1345,14 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
 
     #[doc(alias = "mark-deleted")]
     fn connect_mark_deleted<F: Fn(&Self, &TextMark) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn mark_deleted_trampoline<P, F: Fn(&P, &TextMark) + 'static>(
+        unsafe extern "C" fn mark_deleted_trampoline<
+            P: IsA<TextBuffer>,
+            F: Fn(&P, &TextMark) + 'static,
+        >(
             this: *mut ffi::GtkTextBuffer,
             mark: *mut ffi::GtkTextMark,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<TextBuffer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(
                 &TextBuffer::from_glib_borrow(this).unsafe_cast_ref(),
@@ -1384,14 +1377,15 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
         &self,
         f: F,
     ) -> SignalHandlerId {
-        unsafe extern "C" fn mark_set_trampoline<P, F: Fn(&P, &TextIter, &TextMark) + 'static>(
+        unsafe extern "C" fn mark_set_trampoline<
+            P: IsA<TextBuffer>,
+            F: Fn(&P, &TextIter, &TextMark) + 'static,
+        >(
             this: *mut ffi::GtkTextBuffer,
             location: *mut ffi::GtkTextIter,
             mark: *mut ffi::GtkTextMark,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<TextBuffer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(
                 &TextBuffer::from_glib_borrow(this).unsafe_cast_ref(),
@@ -1414,12 +1408,13 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
 
     #[doc(alias = "modified-changed")]
     fn connect_modified_changed<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn modified_changed_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn modified_changed_trampoline<
+            P: IsA<TextBuffer>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkTextBuffer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<TextBuffer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&TextBuffer::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1438,13 +1433,14 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
 
     #[doc(alias = "paste-done")]
     fn connect_paste_done<F: Fn(&Self, &gdk::Clipboard) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn paste_done_trampoline<P, F: Fn(&P, &gdk::Clipboard) + 'static>(
+        unsafe extern "C" fn paste_done_trampoline<
+            P: IsA<TextBuffer>,
+            F: Fn(&P, &gdk::Clipboard) + 'static,
+        >(
             this: *mut ffi::GtkTextBuffer,
             clipboard: *mut gdk::ffi::GdkClipboard,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<TextBuffer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(
                 &TextBuffer::from_glib_borrow(this).unsafe_cast_ref(),
@@ -1466,12 +1462,10 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
 
     #[doc(alias = "redo")]
     fn connect_redo<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn redo_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn redo_trampoline<P: IsA<TextBuffer>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkTextBuffer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<TextBuffer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&TextBuffer::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1494,7 +1488,7 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
         f: F,
     ) -> SignalHandlerId {
         unsafe extern "C" fn remove_tag_trampoline<
-            P,
+            P: IsA<TextBuffer>,
             F: Fn(&P, &TextTag, &TextIter, &TextIter) + 'static,
         >(
             this: *mut ffi::GtkTextBuffer,
@@ -1502,9 +1496,7 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
             start: *mut ffi::GtkTextIter,
             end: *mut ffi::GtkTextIter,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<TextBuffer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(
                 &TextBuffer::from_glib_borrow(this).unsafe_cast_ref(),
@@ -1528,12 +1520,10 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
 
     #[doc(alias = "undo")]
     fn connect_undo<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn undo_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn undo_trampoline<P: IsA<TextBuffer>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkTextBuffer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<TextBuffer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&TextBuffer::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1552,13 +1542,11 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
 
     #[doc(alias = "can-redo")]
     fn connect_can_redo_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_can_redo_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_can_redo_trampoline<P: IsA<TextBuffer>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkTextBuffer,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<TextBuffer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&TextBuffer::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1577,13 +1565,11 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
 
     #[doc(alias = "can-undo")]
     fn connect_can_undo_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_can_undo_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_can_undo_trampoline<P: IsA<TextBuffer>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkTextBuffer,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<TextBuffer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&TextBuffer::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1602,13 +1588,14 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
 
     #[doc(alias = "cursor-position")]
     fn connect_cursor_position_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_cursor_position_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_cursor_position_trampoline<
+            P: IsA<TextBuffer>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkTextBuffer,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<TextBuffer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&TextBuffer::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1627,13 +1614,14 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
 
     #[doc(alias = "enable-undo")]
     fn connect_enable_undo_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_enable_undo_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_enable_undo_trampoline<
+            P: IsA<TextBuffer>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkTextBuffer,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<TextBuffer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&TextBuffer::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1652,13 +1640,14 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
 
     #[doc(alias = "has-selection")]
     fn connect_has_selection_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_has_selection_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_has_selection_trampoline<
+            P: IsA<TextBuffer>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkTextBuffer,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<TextBuffer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&TextBuffer::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -1677,13 +1666,11 @@ impl<O: IsA<TextBuffer>> TextBufferExt for O {
 
     #[doc(alias = "text")]
     fn connect_text_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_text_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_text_trampoline<P: IsA<TextBuffer>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkTextBuffer,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<TextBuffer>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&TextBuffer::from_glib_borrow(this).unsafe_cast_ref())
         }

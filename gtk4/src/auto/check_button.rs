@@ -250,7 +250,7 @@ impl CheckButtonBuilder {
         self
     }
 
-    pub fn group<P: IsA<CheckButton>>(mut self, group: &P) -> Self {
+    pub fn group(mut self, group: &impl IsA<CheckButton>) -> Self {
         self.group = Some(group.clone().upcast());
         self
     }
@@ -330,7 +330,7 @@ impl CheckButtonBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }
@@ -454,7 +454,7 @@ pub trait CheckButtonExt: 'static {
     fn set_active(&self, setting: bool);
 
     #[doc(alias = "gtk_check_button_set_group")]
-    fn set_group<P: IsA<CheckButton>>(&self, group: Option<&P>);
+    fn set_group(&self, group: Option<&impl IsA<CheckButton>>);
 
     #[doc(alias = "gtk_check_button_set_inconsistent")]
     fn set_inconsistent(&self, inconsistent: bool);
@@ -532,7 +532,7 @@ impl<O: IsA<CheckButton>> CheckButtonExt for O {
         }
     }
 
-    fn set_group<P: IsA<CheckButton>>(&self, group: Option<&P>) {
+    fn set_group(&self, group: Option<&impl IsA<CheckButton>>) {
         unsafe {
             ffi::gtk_check_button_set_group(
                 self.as_ref().to_glib_none().0,
@@ -569,12 +569,10 @@ impl<O: IsA<CheckButton>> CheckButtonExt for O {
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v4_2")))]
     #[doc(alias = "activate")]
     fn connect_activate<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn activate_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn activate_trampoline<P: IsA<CheckButton>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkCheckButton,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<CheckButton>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&CheckButton::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -603,12 +601,10 @@ impl<O: IsA<CheckButton>> CheckButtonExt for O {
 
     #[doc(alias = "toggled")]
     fn connect_toggled<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn toggled_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn toggled_trampoline<P: IsA<CheckButton>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkCheckButton,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<CheckButton>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&CheckButton::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -627,13 +623,11 @@ impl<O: IsA<CheckButton>> CheckButtonExt for O {
 
     #[doc(alias = "active")]
     fn connect_active_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_active_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_active_trampoline<P: IsA<CheckButton>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkCheckButton,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<CheckButton>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&CheckButton::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -652,13 +646,11 @@ impl<O: IsA<CheckButton>> CheckButtonExt for O {
 
     #[doc(alias = "group")]
     fn connect_group_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_group_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_group_trampoline<P: IsA<CheckButton>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkCheckButton,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<CheckButton>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&CheckButton::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -677,13 +669,14 @@ impl<O: IsA<CheckButton>> CheckButtonExt for O {
 
     #[doc(alias = "inconsistent")]
     fn connect_inconsistent_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_inconsistent_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_inconsistent_trampoline<
+            P: IsA<CheckButton>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkCheckButton,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<CheckButton>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&CheckButton::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -702,13 +695,11 @@ impl<O: IsA<CheckButton>> CheckButtonExt for O {
 
     #[doc(alias = "label")]
     fn connect_label_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_label_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_label_trampoline<P: IsA<CheckButton>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkCheckButton,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<CheckButton>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&CheckButton::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -727,13 +718,14 @@ impl<O: IsA<CheckButton>> CheckButtonExt for O {
 
     #[doc(alias = "use-underline")]
     fn connect_use_underline_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_use_underline_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_use_underline_trampoline<
+            P: IsA<CheckButton>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkCheckButton,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<CheckButton>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&CheckButton::from_glib_borrow(this).unsafe_cast_ref())
         }

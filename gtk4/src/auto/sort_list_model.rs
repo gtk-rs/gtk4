@@ -25,9 +25,9 @@ glib::wrapper! {
 
 impl SortListModel {
     #[doc(alias = "gtk_sort_list_model_new")]
-    pub fn new<P: IsA<gio::ListModel>, Q: IsA<Sorter>>(
-        model: Option<&P>,
-        sorter: Option<&Q>,
+    pub fn new(
+        model: Option<&impl IsA<gio::ListModel>>,
+        sorter: Option<&impl IsA<Sorter>>,
     ) -> SortListModel {
         assert_initialized_main_thread!();
         unsafe {
@@ -84,7 +84,7 @@ impl SortListModel {
     }
 
     #[doc(alias = "gtk_sort_list_model_set_model")]
-    pub fn set_model<P: IsA<gio::ListModel>>(&self, model: Option<&P>) {
+    pub fn set_model(&self, model: Option<&impl IsA<gio::ListModel>>) {
         unsafe {
             ffi::gtk_sort_list_model_set_model(
                 self.to_glib_none().0,
@@ -94,7 +94,7 @@ impl SortListModel {
     }
 
     #[doc(alias = "gtk_sort_list_model_set_sorter")]
-    pub fn set_sorter<P: IsA<Sorter>>(&self, sorter: Option<&P>) {
+    pub fn set_sorter(&self, sorter: Option<&impl IsA<Sorter>>) {
         unsafe {
             ffi::gtk_sort_list_model_set_sorter(
                 self.to_glib_none().0,
@@ -104,10 +104,7 @@ impl SortListModel {
     }
 
     #[doc(alias = "incremental")]
-    pub fn connect_incremental_notify<F: Fn(&SortListModel) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_incremental_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_incremental_trampoline<F: Fn(&SortListModel) + 'static>(
             this: *mut ffi::GtkSortListModel,
             _param_spec: glib::ffi::gpointer,
@@ -130,7 +127,7 @@ impl SortListModel {
     }
 
     #[doc(alias = "model")]
-    pub fn connect_model_notify<F: Fn(&SortListModel) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_model_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_model_trampoline<F: Fn(&SortListModel) + 'static>(
             this: *mut ffi::GtkSortListModel,
             _param_spec: glib::ffi::gpointer,
@@ -153,7 +150,7 @@ impl SortListModel {
     }
 
     #[doc(alias = "pending")]
-    pub fn connect_pending_notify<F: Fn(&SortListModel) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_pending_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_pending_trampoline<F: Fn(&SortListModel) + 'static>(
             this: *mut ffi::GtkSortListModel,
             _param_spec: glib::ffi::gpointer,
@@ -176,7 +173,7 @@ impl SortListModel {
     }
 
     #[doc(alias = "sorter")]
-    pub fn connect_sorter_notify<F: Fn(&SortListModel) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_sorter_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_sorter_trampoline<F: Fn(&SortListModel) + 'static>(
             this: *mut ffi::GtkSortListModel,
             _param_spec: glib::ffi::gpointer,
@@ -237,12 +234,12 @@ impl SortListModelBuilder {
         self
     }
 
-    pub fn model<P: IsA<gio::ListModel>>(mut self, model: &P) -> Self {
+    pub fn model(mut self, model: &impl IsA<gio::ListModel>) -> Self {
         self.model = Some(model.clone().upcast());
         self
     }
 
-    pub fn sorter<P: IsA<Sorter>>(mut self, sorter: &P) -> Self {
+    pub fn sorter(mut self, sorter: &impl IsA<Sorter>) -> Self {
         self.sorter = Some(sorter.clone().upcast());
         self
     }

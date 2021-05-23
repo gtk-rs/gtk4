@@ -29,7 +29,7 @@ impl TextTagTable {
     }
 
     #[doc(alias = "gtk_text_tag_table_add")]
-    pub fn add<P: IsA<TextTag>>(&self, tag: &P) -> bool {
+    pub fn add(&self, tag: &impl IsA<TextTag>) -> bool {
         unsafe {
             from_glib(ffi::gtk_text_tag_table_add(
                 self.to_glib_none().0,
@@ -77,17 +77,14 @@ impl TextTagTable {
     }
 
     #[doc(alias = "gtk_text_tag_table_remove")]
-    pub fn remove<P: IsA<TextTag>>(&self, tag: &P) {
+    pub fn remove(&self, tag: &impl IsA<TextTag>) {
         unsafe {
             ffi::gtk_text_tag_table_remove(self.to_glib_none().0, tag.as_ref().to_glib_none().0);
         }
     }
 
     #[doc(alias = "tag-added")]
-    pub fn connect_tag_added<F: Fn(&TextTagTable, &TextTag) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_tag_added<F: Fn(&Self, &TextTag) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn tag_added_trampoline<F: Fn(&TextTagTable, &TextTag) + 'static>(
             this: *mut ffi::GtkTextTagTable,
             tag: *mut ffi::GtkTextTag,
@@ -110,7 +107,7 @@ impl TextTagTable {
     }
 
     #[doc(alias = "tag-changed")]
-    pub fn connect_tag_changed<F: Fn(&TextTagTable, &TextTag, bool) + 'static>(
+    pub fn connect_tag_changed<F: Fn(&Self, &TextTag, bool) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -143,10 +140,7 @@ impl TextTagTable {
     }
 
     #[doc(alias = "tag-removed")]
-    pub fn connect_tag_removed<F: Fn(&TextTagTable, &TextTag) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_tag_removed<F: Fn(&Self, &TextTag) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn tag_removed_trampoline<F: Fn(&TextTagTable, &TextTag) + 'static>(
             this: *mut ffi::GtkTextTagTable,
             tag: *mut ffi::GtkTextTag,

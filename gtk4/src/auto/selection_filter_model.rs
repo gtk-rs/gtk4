@@ -25,7 +25,7 @@ glib::wrapper! {
 
 impl SelectionFilterModel {
     #[doc(alias = "gtk_selection_filter_model_new")]
-    pub fn new<P: IsA<SelectionModel>>(model: Option<&P>) -> SelectionFilterModel {
+    pub fn new(model: Option<&impl IsA<SelectionModel>>) -> SelectionFilterModel {
         assert_initialized_main_thread!();
         unsafe {
             from_glib_full(ffi::gtk_selection_filter_model_new(
@@ -52,7 +52,7 @@ impl SelectionFilterModel {
     }
 
     #[doc(alias = "gtk_selection_filter_model_set_model")]
-    pub fn set_model<P: IsA<SelectionModel>>(&self, model: Option<&P>) {
+    pub fn set_model(&self, model: Option<&impl IsA<SelectionModel>>) {
         unsafe {
             ffi::gtk_selection_filter_model_set_model(
                 self.to_glib_none().0,
@@ -62,10 +62,7 @@ impl SelectionFilterModel {
     }
 
     #[doc(alias = "model")]
-    pub fn connect_model_notify<F: Fn(&SelectionFilterModel) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_model_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_model_trampoline<F: Fn(&SelectionFilterModel) + 'static>(
             this: *mut ffi::GtkSelectionFilterModel,
             _param_spec: glib::ffi::gpointer,
@@ -113,7 +110,7 @@ impl SelectionFilterModelBuilder {
             .expect("Failed to create an instance of SelectionFilterModel")
     }
 
-    pub fn model<P: IsA<SelectionModel>>(mut self, model: &P) -> Self {
+    pub fn model(mut self, model: &impl IsA<SelectionModel>) -> Self {
         self.model = Some(model.clone().upcast());
         self
     }

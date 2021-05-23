@@ -33,7 +33,7 @@ pub trait FilterExt: 'static {
 
     #[doc(alias = "gtk_filter_match")]
     #[doc(alias = "match")]
-    fn match_<P: IsA<glib::Object>>(&self, item: &P) -> bool;
+    fn match_(&self, item: &impl IsA<glib::Object>) -> bool;
 
     #[doc(alias = "changed")]
     fn connect_changed<F: Fn(&Self, FilterChange) + 'static>(&self, f: F) -> SignalHandlerId;
@@ -54,7 +54,7 @@ impl<O: IsA<Filter>> FilterExt for O {
         }
     }
 
-    fn match_<P: IsA<glib::Object>>(&self, item: &P) -> bool {
+    fn match_(&self, item: &impl IsA<glib::Object>) -> bool {
         unsafe {
             from_glib(ffi::gtk_filter_match(
                 self.as_ref().to_glib_none().0,
@@ -65,13 +65,14 @@ impl<O: IsA<Filter>> FilterExt for O {
 
     #[doc(alias = "changed")]
     fn connect_changed<F: Fn(&Self, FilterChange) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn changed_trampoline<P, F: Fn(&P, FilterChange) + 'static>(
+        unsafe extern "C" fn changed_trampoline<
+            P: IsA<Filter>,
+            F: Fn(&P, FilterChange) + 'static,
+        >(
             this: *mut ffi::GtkFilter,
             change: ffi::GtkFilterChange,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Filter>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(
                 &Filter::from_glib_borrow(this).unsafe_cast_ref(),

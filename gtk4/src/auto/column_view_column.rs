@@ -27,9 +27,9 @@ glib::wrapper! {
 
 impl ColumnViewColumn {
     #[doc(alias = "gtk_column_view_column_new")]
-    pub fn new<P: IsA<ListItemFactory>>(
+    pub fn new(
         title: Option<&str>,
-        factory: Option<&P>,
+        factory: Option<&impl IsA<ListItemFactory>>,
     ) -> ColumnViewColumn {
         assert_initialized_main_thread!();
         unsafe {
@@ -137,7 +137,7 @@ impl ColumnViewColumn {
     }
 
     #[doc(alias = "gtk_column_view_column_set_factory")]
-    pub fn set_factory<P: IsA<ListItemFactory>>(&self, factory: Option<&P>) {
+    pub fn set_factory(&self, factory: Option<&impl IsA<ListItemFactory>>) {
         unsafe {
             ffi::gtk_column_view_column_set_factory(
                 self.to_glib_none().0,
@@ -154,7 +154,7 @@ impl ColumnViewColumn {
     }
 
     #[doc(alias = "gtk_column_view_column_set_header_menu")]
-    pub fn set_header_menu<P: IsA<gio::MenuModel>>(&self, menu: Option<&P>) {
+    pub fn set_header_menu(&self, menu: Option<&impl IsA<gio::MenuModel>>) {
         unsafe {
             ffi::gtk_column_view_column_set_header_menu(
                 self.to_glib_none().0,
@@ -171,7 +171,7 @@ impl ColumnViewColumn {
     }
 
     #[doc(alias = "gtk_column_view_column_set_sorter")]
-    pub fn set_sorter<P: IsA<Sorter>>(&self, sorter: Option<&P>) {
+    pub fn set_sorter(&self, sorter: Option<&impl IsA<Sorter>>) {
         unsafe {
             ffi::gtk_column_view_column_set_sorter(
                 self.to_glib_none().0,
@@ -195,10 +195,7 @@ impl ColumnViewColumn {
     }
 
     #[doc(alias = "column-view")]
-    pub fn connect_column_view_notify<F: Fn(&ColumnViewColumn) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_column_view_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_column_view_trampoline<F: Fn(&ColumnViewColumn) + 'static>(
             this: *mut ffi::GtkColumnViewColumn,
             _param_spec: glib::ffi::gpointer,
@@ -221,10 +218,7 @@ impl ColumnViewColumn {
     }
 
     #[doc(alias = "expand")]
-    pub fn connect_expand_notify<F: Fn(&ColumnViewColumn) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_expand_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_expand_trampoline<F: Fn(&ColumnViewColumn) + 'static>(
             this: *mut ffi::GtkColumnViewColumn,
             _param_spec: glib::ffi::gpointer,
@@ -247,10 +241,7 @@ impl ColumnViewColumn {
     }
 
     #[doc(alias = "factory")]
-    pub fn connect_factory_notify<F: Fn(&ColumnViewColumn) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_factory_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_factory_trampoline<F: Fn(&ColumnViewColumn) + 'static>(
             this: *mut ffi::GtkColumnViewColumn,
             _param_spec: glib::ffi::gpointer,
@@ -273,10 +264,7 @@ impl ColumnViewColumn {
     }
 
     #[doc(alias = "fixed-width")]
-    pub fn connect_fixed_width_notify<F: Fn(&ColumnViewColumn) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_fixed_width_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_fixed_width_trampoline<F: Fn(&ColumnViewColumn) + 'static>(
             this: *mut ffi::GtkColumnViewColumn,
             _param_spec: glib::ffi::gpointer,
@@ -299,10 +287,7 @@ impl ColumnViewColumn {
     }
 
     #[doc(alias = "header-menu")]
-    pub fn connect_header_menu_notify<F: Fn(&ColumnViewColumn) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_header_menu_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_header_menu_trampoline<F: Fn(&ColumnViewColumn) + 'static>(
             this: *mut ffi::GtkColumnViewColumn,
             _param_spec: glib::ffi::gpointer,
@@ -325,10 +310,7 @@ impl ColumnViewColumn {
     }
 
     #[doc(alias = "resizable")]
-    pub fn connect_resizable_notify<F: Fn(&ColumnViewColumn) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_resizable_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_resizable_trampoline<F: Fn(&ColumnViewColumn) + 'static>(
             this: *mut ffi::GtkColumnViewColumn,
             _param_spec: glib::ffi::gpointer,
@@ -351,10 +333,7 @@ impl ColumnViewColumn {
     }
 
     #[doc(alias = "sorter")]
-    pub fn connect_sorter_notify<F: Fn(&ColumnViewColumn) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_sorter_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_sorter_trampoline<F: Fn(&ColumnViewColumn) + 'static>(
             this: *mut ffi::GtkColumnViewColumn,
             _param_spec: glib::ffi::gpointer,
@@ -377,10 +356,7 @@ impl ColumnViewColumn {
     }
 
     #[doc(alias = "title")]
-    pub fn connect_title_notify<F: Fn(&ColumnViewColumn) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_title_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_title_trampoline<F: Fn(&ColumnViewColumn) + 'static>(
             this: *mut ffi::GtkColumnViewColumn,
             _param_spec: glib::ffi::gpointer,
@@ -403,10 +379,7 @@ impl ColumnViewColumn {
     }
 
     #[doc(alias = "visible")]
-    pub fn connect_visible_notify<F: Fn(&ColumnViewColumn) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_visible_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_visible_trampoline<F: Fn(&ColumnViewColumn) + 'static>(
             this: *mut ffi::GtkColumnViewColumn,
             _param_spec: glib::ffi::gpointer,
@@ -487,7 +460,7 @@ impl ColumnViewColumnBuilder {
         self
     }
 
-    pub fn factory<P: IsA<ListItemFactory>>(mut self, factory: &P) -> Self {
+    pub fn factory(mut self, factory: &impl IsA<ListItemFactory>) -> Self {
         self.factory = Some(factory.clone().upcast());
         self
     }
@@ -497,7 +470,7 @@ impl ColumnViewColumnBuilder {
         self
     }
 
-    pub fn header_menu<P: IsA<gio::MenuModel>>(mut self, header_menu: &P) -> Self {
+    pub fn header_menu(mut self, header_menu: &impl IsA<gio::MenuModel>) -> Self {
         self.header_menu = Some(header_menu.clone().upcast());
         self
     }
@@ -507,7 +480,7 @@ impl ColumnViewColumnBuilder {
         self
     }
 
-    pub fn sorter<P: IsA<Sorter>>(mut self, sorter: &P) -> Self {
+    pub fn sorter(mut self, sorter: &impl IsA<Sorter>) -> Self {
         self.sorter = Some(sorter.clone().upcast());
         self
     }

@@ -39,7 +39,7 @@ glib::wrapper! {
 
 impl ColorChooserDialog {
     #[doc(alias = "gtk_color_chooser_dialog_new")]
-    pub fn new<P: IsA<Window>>(title: Option<&str>, parent: Option<&P>) -> ColorChooserDialog {
+    pub fn new(title: Option<&str>, parent: Option<&impl IsA<Window>>) -> ColorChooserDialog {
         assert_initialized_main_thread!();
         unsafe {
             Widget::from_glib_none(ffi::gtk_color_chooser_dialog_new(
@@ -84,10 +84,7 @@ impl ColorChooserDialog {
     }
 
     #[doc(alias = "show-editor")]
-    pub fn connect_show_editor_notify<F: Fn(&ColorChooserDialog) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_show_editor_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_show_editor_trampoline<F: Fn(&ColorChooserDialog) + 'static>(
             this: *mut ffi::GtkColorChooserDialog,
             _param_spec: glib::ffi::gpointer,
@@ -368,12 +365,12 @@ impl ColorChooserDialogBuilder {
         self
     }
 
-    pub fn application<P: IsA<Application>>(mut self, application: &P) -> Self {
+    pub fn application(mut self, application: &impl IsA<Application>) -> Self {
         self.application = Some(application.clone().upcast());
         self
     }
 
-    pub fn child<P: IsA<Widget>>(mut self, child: &P) -> Self {
+    pub fn child(mut self, child: &impl IsA<Widget>) -> Self {
         self.child = Some(child.clone().upcast());
         self
     }
@@ -388,7 +385,7 @@ impl ColorChooserDialogBuilder {
         self
     }
 
-    pub fn default_widget<P: IsA<Widget>>(mut self, default_widget: &P) -> Self {
+    pub fn default_widget(mut self, default_widget: &impl IsA<Widget>) -> Self {
         self.default_widget = Some(default_widget.clone().upcast());
         self
     }
@@ -418,7 +415,7 @@ impl ColorChooserDialogBuilder {
         self
     }
 
-    pub fn focus_widget<P: IsA<Widget>>(mut self, focus_widget: &P) -> Self {
+    pub fn focus_widget(mut self, focus_widget: &impl IsA<Widget>) -> Self {
         self.focus_widget = Some(focus_widget.clone().upcast());
         self
     }
@@ -475,7 +472,7 @@ impl ColorChooserDialogBuilder {
         self
     }
 
-    pub fn transient_for<P: IsA<Window>>(mut self, transient_for: &P) -> Self {
+    pub fn transient_for(mut self, transient_for: &impl IsA<Window>) -> Self {
         self.transient_for = Some(transient_for.clone().upcast());
         self
     }
@@ -540,7 +537,7 @@ impl ColorChooserDialogBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }

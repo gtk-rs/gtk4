@@ -40,7 +40,7 @@ impl SizeGroup {
     }
 
     #[doc(alias = "gtk_size_group_add_widget")]
-    pub fn add_widget<P: IsA<Widget>>(&self, widget: &P) {
+    pub fn add_widget(&self, widget: &impl IsA<Widget>) {
         unsafe {
             ffi::gtk_size_group_add_widget(self.to_glib_none().0, widget.as_ref().to_glib_none().0);
         }
@@ -63,7 +63,7 @@ impl SizeGroup {
     }
 
     #[doc(alias = "gtk_size_group_remove_widget")]
-    pub fn remove_widget<P: IsA<Widget>>(&self, widget: &P) {
+    pub fn remove_widget(&self, widget: &impl IsA<Widget>) {
         unsafe {
             ffi::gtk_size_group_remove_widget(
                 self.to_glib_none().0,
@@ -80,7 +80,7 @@ impl SizeGroup {
     }
 
     #[doc(alias = "mode")]
-    pub fn connect_mode_notify<F: Fn(&SizeGroup) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_mode_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_mode_trampoline<F: Fn(&SizeGroup) + 'static>(
             this: *mut ffi::GtkSizeGroup,
             _param_spec: glib::ffi::gpointer,

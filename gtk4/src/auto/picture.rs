@@ -39,7 +39,7 @@ impl Picture {
 
     #[doc(alias = "gtk_picture_new_for_file")]
     #[doc(alias = "new_for_file")]
-    pub fn for_file<P: IsA<gio::File>>(file: Option<&P>) -> Picture {
+    pub fn for_file(file: Option<&impl IsA<gio::File>>) -> Picture {
         assert_initialized_main_thread!();
         unsafe {
             Widget::from_glib_none(ffi::gtk_picture_new_for_file(
@@ -51,7 +51,7 @@ impl Picture {
 
     #[doc(alias = "gtk_picture_new_for_filename")]
     #[doc(alias = "new_for_filename")]
-    pub fn for_filename<P: AsRef<std::path::Path>>(filename: P) -> Picture {
+    pub fn for_filename(filename: impl AsRef<std::path::Path>) -> Picture {
         assert_initialized_main_thread!();
         unsafe {
             Widget::from_glib_none(ffi::gtk_picture_new_for_filename(
@@ -63,7 +63,7 @@ impl Picture {
 
     #[doc(alias = "gtk_picture_new_for_paintable")]
     #[doc(alias = "new_for_paintable")]
-    pub fn for_paintable<P: IsA<gdk::Paintable>>(paintable: Option<&P>) -> Picture {
+    pub fn for_paintable(paintable: Option<&impl IsA<gdk::Paintable>>) -> Picture {
         assert_initialized_main_thread!();
         unsafe {
             Widget::from_glib_none(ffi::gtk_picture_new_for_paintable(
@@ -154,7 +154,7 @@ impl Picture {
     }
 
     #[doc(alias = "gtk_picture_set_file")]
-    pub fn set_file<P: IsA<gio::File>>(&self, file: Option<&P>) {
+    pub fn set_file(&self, file: Option<&impl IsA<gio::File>>) {
         unsafe {
             ffi::gtk_picture_set_file(
                 self.to_glib_none().0,
@@ -181,7 +181,7 @@ impl Picture {
     }
 
     #[doc(alias = "gtk_picture_set_paintable")]
-    pub fn set_paintable<P: IsA<gdk::Paintable>>(&self, paintable: Option<&P>) {
+    pub fn set_paintable(&self, paintable: Option<&impl IsA<gdk::Paintable>>) {
         unsafe {
             ffi::gtk_picture_set_paintable(
                 self.to_glib_none().0,
@@ -205,10 +205,7 @@ impl Picture {
     }
 
     #[doc(alias = "alternative-text")]
-    pub fn connect_alternative_text_notify<F: Fn(&Picture) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_alternative_text_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_alternative_text_trampoline<F: Fn(&Picture) + 'static>(
             this: *mut ffi::GtkPicture,
             _param_spec: glib::ffi::gpointer,
@@ -231,7 +228,7 @@ impl Picture {
     }
 
     #[doc(alias = "can-shrink")]
-    pub fn connect_can_shrink_notify<F: Fn(&Picture) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_can_shrink_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_can_shrink_trampoline<F: Fn(&Picture) + 'static>(
             this: *mut ffi::GtkPicture,
             _param_spec: glib::ffi::gpointer,
@@ -254,7 +251,7 @@ impl Picture {
     }
 
     #[doc(alias = "file")]
-    pub fn connect_file_notify<F: Fn(&Picture) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_file_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_file_trampoline<F: Fn(&Picture) + 'static>(
             this: *mut ffi::GtkPicture,
             _param_spec: glib::ffi::gpointer,
@@ -277,7 +274,7 @@ impl Picture {
     }
 
     #[doc(alias = "keep-aspect-ratio")]
-    pub fn connect_keep_aspect_ratio_notify<F: Fn(&Picture) + 'static>(
+    pub fn connect_keep_aspect_ratio_notify<F: Fn(&Self) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -303,7 +300,7 @@ impl Picture {
     }
 
     #[doc(alias = "paintable")]
-    pub fn connect_paintable_notify<F: Fn(&Picture) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_paintable_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_paintable_trampoline<F: Fn(&Picture) + 'static>(
             this: *mut ffi::GtkPicture,
             _param_spec: glib::ffi::gpointer,
@@ -502,7 +499,7 @@ impl PictureBuilder {
         self
     }
 
-    pub fn file<P: IsA<gio::File>>(mut self, file: &P) -> Self {
+    pub fn file(mut self, file: &impl IsA<gio::File>) -> Self {
         self.file = Some(file.clone().upcast());
         self
     }
@@ -512,7 +509,7 @@ impl PictureBuilder {
         self
     }
 
-    pub fn paintable<P: IsA<gdk::Paintable>>(mut self, paintable: &P) -> Self {
+    pub fn paintable(mut self, paintable: &impl IsA<gdk::Paintable>) -> Self {
         self.paintable = Some(paintable.clone().upcast());
         self
     }
@@ -577,7 +574,7 @@ impl PictureBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }

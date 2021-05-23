@@ -46,9 +46,9 @@ impl CellView {
 
     #[doc(alias = "gtk_cell_view_new_with_context")]
     #[doc(alias = "new_with_context")]
-    pub fn with_context<P: IsA<CellArea>, Q: IsA<CellAreaContext>>(
-        area: &P,
-        context: &Q,
+    pub fn with_context(
+        area: &impl IsA<CellArea>,
+        context: &impl IsA<CellAreaContext>,
     ) -> CellView {
         skip_assert_initialized!();
         unsafe {
@@ -82,7 +82,7 @@ impl CellView {
 
     #[doc(alias = "gtk_cell_view_new_with_texture")]
     #[doc(alias = "new_with_texture")]
-    pub fn with_texture<P: IsA<gdk::Texture>>(texture: &P) -> CellView {
+    pub fn with_texture(texture: &impl IsA<gdk::Texture>) -> CellView {
         assert_initialized_main_thread!();
         unsafe {
             Widget::from_glib_none(ffi::gtk_cell_view_new_with_texture(
@@ -148,7 +148,7 @@ impl CellView {
     }
 
     #[doc(alias = "gtk_cell_view_set_model")]
-    pub fn set_model<P: IsA<TreeModel>>(&self, model: Option<&P>) {
+    pub fn set_model(&self, model: Option<&impl IsA<TreeModel>>) {
         unsafe {
             ffi::gtk_cell_view_set_model(
                 self.to_glib_none().0,
@@ -188,10 +188,7 @@ impl CellView {
     }
 
     #[doc(alias = "draw-sensitive")]
-    pub fn connect_draw_sensitive_notify<F: Fn(&CellView) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_draw_sensitive_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_draw_sensitive_trampoline<F: Fn(&CellView) + 'static>(
             this: *mut ffi::GtkCellView,
             _param_spec: glib::ffi::gpointer,
@@ -214,7 +211,7 @@ impl CellView {
     }
 
     #[doc(alias = "fit-model")]
-    pub fn connect_fit_model_notify<F: Fn(&CellView) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_fit_model_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_fit_model_trampoline<F: Fn(&CellView) + 'static>(
             this: *mut ffi::GtkCellView,
             _param_spec: glib::ffi::gpointer,
@@ -237,7 +234,7 @@ impl CellView {
     }
 
     #[doc(alias = "model")]
-    pub fn connect_model_notify<F: Fn(&CellView) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_model_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_model_trampoline<F: Fn(&CellView) + 'static>(
             this: *mut ffi::GtkCellView,
             _param_spec: glib::ffi::gpointer,
@@ -431,12 +428,12 @@ impl CellViewBuilder {
             .expect("Failed to create an instance of CellView")
     }
 
-    pub fn cell_area<P: IsA<CellArea>>(mut self, cell_area: &P) -> Self {
+    pub fn cell_area(mut self, cell_area: &impl IsA<CellArea>) -> Self {
         self.cell_area = Some(cell_area.clone().upcast());
         self
     }
 
-    pub fn cell_area_context<P: IsA<CellAreaContext>>(mut self, cell_area_context: &P) -> Self {
+    pub fn cell_area_context(mut self, cell_area_context: &impl IsA<CellAreaContext>) -> Self {
         self.cell_area_context = Some(cell_area_context.clone().upcast());
         self
     }
@@ -451,7 +448,7 @@ impl CellViewBuilder {
         self
     }
 
-    pub fn model<P: IsA<TreeModel>>(mut self, model: &P) -> Self {
+    pub fn model(mut self, model: &impl IsA<TreeModel>) -> Self {
         self.model = Some(model.clone().upcast());
         self
     }
@@ -516,7 +513,7 @@ impl CellViewBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }

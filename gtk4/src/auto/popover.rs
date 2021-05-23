@@ -237,12 +237,12 @@ impl PopoverBuilder {
         self
     }
 
-    pub fn child<P: IsA<Widget>>(mut self, child: &P) -> Self {
+    pub fn child(mut self, child: &impl IsA<Widget>) -> Self {
         self.child = Some(child.clone().upcast());
         self
     }
 
-    pub fn default_widget<P: IsA<Widget>>(mut self, default_widget: &P) -> Self {
+    pub fn default_widget(mut self, default_widget: &impl IsA<Widget>) -> Self {
         self.default_widget = Some(default_widget.clone().upcast());
         self
     }
@@ -327,7 +327,7 @@ impl PopoverBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }
@@ -469,10 +469,10 @@ pub trait PopoverExt: 'static {
     fn set_cascade_popdown(&self, cascade_popdown: bool);
 
     #[doc(alias = "gtk_popover_set_child")]
-    fn set_child<P: IsA<Widget>>(&self, child: Option<&P>);
+    fn set_child(&self, child: Option<&impl IsA<Widget>>);
 
     #[doc(alias = "gtk_popover_set_default_widget")]
-    fn set_default_widget<P: IsA<Widget>>(&self, widget: Option<&P>);
+    fn set_default_widget(&self, widget: Option<&impl IsA<Widget>>);
 
     #[doc(alias = "gtk_popover_set_has_arrow")]
     fn set_has_arrow(&self, has_arrow: bool);
@@ -633,7 +633,7 @@ impl<O: IsA<Popover>> PopoverExt for O {
         }
     }
 
-    fn set_child<P: IsA<Widget>>(&self, child: Option<&P>) {
+    fn set_child(&self, child: Option<&impl IsA<Widget>>) {
         unsafe {
             ffi::gtk_popover_set_child(
                 self.as_ref().to_glib_none().0,
@@ -642,7 +642,7 @@ impl<O: IsA<Popover>> PopoverExt for O {
         }
     }
 
-    fn set_default_widget<P: IsA<Widget>>(&self, widget: Option<&P>) {
+    fn set_default_widget(&self, widget: Option<&impl IsA<Widget>>) {
         unsafe {
             ffi::gtk_popover_set_default_widget(
                 self.as_ref().to_glib_none().0,
@@ -700,12 +700,10 @@ impl<O: IsA<Popover>> PopoverExt for O {
 
     #[doc(alias = "activate-default")]
     fn connect_activate_default<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn activate_default_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn activate_default_trampoline<P: IsA<Popover>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkPopover,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Popover>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Popover::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -732,12 +730,10 @@ impl<O: IsA<Popover>> PopoverExt for O {
 
     #[doc(alias = "closed")]
     fn connect_closed<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn closed_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn closed_trampoline<P: IsA<Popover>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkPopover,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Popover>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Popover::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -756,13 +752,11 @@ impl<O: IsA<Popover>> PopoverExt for O {
 
     #[doc(alias = "autohide")]
     fn connect_autohide_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_autohide_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_autohide_trampoline<P: IsA<Popover>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkPopover,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Popover>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Popover::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -781,13 +775,14 @@ impl<O: IsA<Popover>> PopoverExt for O {
 
     #[doc(alias = "cascade-popdown")]
     fn connect_cascade_popdown_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_cascade_popdown_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_cascade_popdown_trampoline<
+            P: IsA<Popover>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkPopover,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Popover>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Popover::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -806,13 +801,11 @@ impl<O: IsA<Popover>> PopoverExt for O {
 
     #[doc(alias = "child")]
     fn connect_child_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_child_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_child_trampoline<P: IsA<Popover>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkPopover,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Popover>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Popover::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -831,13 +824,14 @@ impl<O: IsA<Popover>> PopoverExt for O {
 
     #[doc(alias = "default-widget")]
     fn connect_default_widget_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_default_widget_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_default_widget_trampoline<
+            P: IsA<Popover>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkPopover,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Popover>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Popover::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -856,13 +850,11 @@ impl<O: IsA<Popover>> PopoverExt for O {
 
     #[doc(alias = "has-arrow")]
     fn connect_has_arrow_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_has_arrow_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_has_arrow_trampoline<P: IsA<Popover>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkPopover,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Popover>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Popover::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -881,13 +873,14 @@ impl<O: IsA<Popover>> PopoverExt for O {
 
     #[doc(alias = "mnemonics-visible")]
     fn connect_mnemonics_visible_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_mnemonics_visible_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_mnemonics_visible_trampoline<
+            P: IsA<Popover>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkPopover,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Popover>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Popover::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -906,13 +899,11 @@ impl<O: IsA<Popover>> PopoverExt for O {
 
     #[doc(alias = "pointing-to")]
     fn connect_pointing_to_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_pointing_to_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_pointing_to_trampoline<P: IsA<Popover>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkPopover,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Popover>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Popover::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -931,13 +922,11 @@ impl<O: IsA<Popover>> PopoverExt for O {
 
     #[doc(alias = "position")]
     fn connect_position_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_position_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_position_trampoline<P: IsA<Popover>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkPopover,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Popover>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Popover::from_glib_borrow(this).unsafe_cast_ref())
         }

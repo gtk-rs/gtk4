@@ -252,7 +252,7 @@ impl ButtonBuilder {
         glib::Object::new::<Button>(&properties).expect("Failed to create an instance of Button")
     }
 
-    pub fn child<P: IsA<Widget>>(mut self, child: &P) -> Self {
+    pub fn child(mut self, child: &impl IsA<Widget>) -> Self {
         self.child = Some(child.clone().upcast());
         self
     }
@@ -337,7 +337,7 @@ impl ButtonBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }
@@ -462,7 +462,7 @@ pub trait ButtonExt: 'static {
     fn uses_underline(&self) -> bool;
 
     #[doc(alias = "gtk_button_set_child")]
-    fn set_child<P: IsA<Widget>>(&self, child: Option<&P>);
+    fn set_child(&self, child: Option<&impl IsA<Widget>>);
 
     #[doc(alias = "gtk_button_set_has_frame")]
     fn set_has_frame(&self, has_frame: bool);
@@ -535,7 +535,7 @@ impl<O: IsA<Button>> ButtonExt for O {
         }
     }
 
-    fn set_child<P: IsA<Widget>>(&self, child: Option<&P>) {
+    fn set_child(&self, child: Option<&impl IsA<Widget>>) {
         unsafe {
             ffi::gtk_button_set_child(
                 self.as_ref().to_glib_none().0,
@@ -576,12 +576,10 @@ impl<O: IsA<Button>> ButtonExt for O {
 
     #[doc(alias = "activate")]
     fn connect_activate<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn activate_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn activate_trampoline<P: IsA<Button>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkButton,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Button>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Button::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -608,12 +606,10 @@ impl<O: IsA<Button>> ButtonExt for O {
 
     #[doc(alias = "clicked")]
     fn connect_clicked<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn clicked_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn clicked_trampoline<P: IsA<Button>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkButton,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Button>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Button::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -640,13 +636,11 @@ impl<O: IsA<Button>> ButtonExt for O {
 
     #[doc(alias = "child")]
     fn connect_child_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_child_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_child_trampoline<P: IsA<Button>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkButton,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Button>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Button::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -665,13 +659,11 @@ impl<O: IsA<Button>> ButtonExt for O {
 
     #[doc(alias = "has-frame")]
     fn connect_has_frame_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_has_frame_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_has_frame_trampoline<P: IsA<Button>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkButton,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Button>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Button::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -690,13 +682,11 @@ impl<O: IsA<Button>> ButtonExt for O {
 
     #[doc(alias = "icon-name")]
     fn connect_icon_name_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_icon_name_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_icon_name_trampoline<P: IsA<Button>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkButton,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Button>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Button::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -715,13 +705,11 @@ impl<O: IsA<Button>> ButtonExt for O {
 
     #[doc(alias = "label")]
     fn connect_label_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_label_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_label_trampoline<P: IsA<Button>, F: Fn(&P) + 'static>(
             this: *mut ffi::GtkButton,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Button>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Button::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -740,13 +728,14 @@ impl<O: IsA<Button>> ButtonExt for O {
 
     #[doc(alias = "use-underline")]
     fn connect_use_underline_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_use_underline_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_use_underline_trampoline<
+            P: IsA<Button>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkButton,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Button>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Button::from_glib_borrow(this).unsafe_cast_ref())
         }

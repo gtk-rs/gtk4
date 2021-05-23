@@ -146,11 +146,11 @@ impl Builder {
     }
 
     #[doc(alias = "gtk_builder_create_closure")]
-    pub fn create_closure<P: IsA<glib::Object>>(
+    pub fn create_closure(
         &self,
         function_name: &str,
         flags: BuilderClosureFlags,
-        object: Option<&P>,
+        object: Option<&impl IsA<glib::Object>>,
     ) -> Result<Option<glib::Closure>, glib::Error> {
         unsafe {
             let mut error = ptr::null_mut();
@@ -170,7 +170,7 @@ impl Builder {
     }
 
     #[doc(alias = "gtk_builder_expose_object")]
-    pub fn expose_object<P: IsA<glib::Object>>(&self, name: &str, object: &P) {
+    pub fn expose_object(&self, name: &str, object: &impl IsA<glib::Object>) {
         unsafe {
             ffi::gtk_builder_expose_object(
                 self.to_glib_none().0,
@@ -181,9 +181,9 @@ impl Builder {
     }
 
     #[doc(alias = "gtk_builder_extend_with_template")]
-    pub fn extend_with_template<P: IsA<glib::Object>>(
+    pub fn extend_with_template(
         &self,
-        object: &P,
+        object: &impl IsA<glib::Object>,
         template_type: glib::types::Type,
         buffer: &str,
     ) -> Result<(), glib::Error> {
@@ -250,7 +250,7 @@ impl Builder {
     }
 
     #[doc(alias = "gtk_builder_set_current_object")]
-    pub fn set_current_object<P: IsA<glib::Object>>(&self, current_object: Option<&P>) {
+    pub fn set_current_object(&self, current_object: Option<&impl IsA<glib::Object>>) {
         unsafe {
             ffi::gtk_builder_set_current_object(
                 self.to_glib_none().0,
@@ -260,7 +260,7 @@ impl Builder {
     }
 
     #[doc(alias = "gtk_builder_set_scope")]
-    pub fn set_scope<P: IsA<BuilderScope>>(&self, scope: Option<&P>) {
+    pub fn set_scope(&self, scope: Option<&impl IsA<BuilderScope>>) {
         unsafe {
             ffi::gtk_builder_set_scope(
                 self.to_glib_none().0,
@@ -301,10 +301,7 @@ impl Builder {
     }
 
     #[doc(alias = "current-object")]
-    pub fn connect_current_object_notify<F: Fn(&Builder) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_current_object_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_current_object_trampoline<F: Fn(&Builder) + 'static>(
             this: *mut ffi::GtkBuilder,
             _param_spec: glib::ffi::gpointer,
@@ -327,7 +324,7 @@ impl Builder {
     }
 
     #[doc(alias = "scope")]
-    pub fn connect_scope_notify<F: Fn(&Builder) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_scope_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_scope_trampoline<F: Fn(&Builder) + 'static>(
             this: *mut ffi::GtkBuilder,
             _param_spec: glib::ffi::gpointer,
@@ -350,7 +347,7 @@ impl Builder {
     }
 
     #[doc(alias = "translation-domain")]
-    pub fn connect_translation_domain_notify<F: Fn(&Builder) + 'static>(
+    pub fn connect_translation_domain_notify<F: Fn(&Self) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -414,12 +411,12 @@ impl BuilderBuilder {
         glib::Object::new::<Builder>(&properties).expect("Failed to create an instance of Builder")
     }
 
-    pub fn current_object<P: IsA<glib::Object>>(mut self, current_object: &P) -> Self {
+    pub fn current_object(mut self, current_object: &impl IsA<glib::Object>) -> Self {
         self.current_object = Some(current_object.clone().upcast());
         self
     }
 
-    pub fn scope<P: IsA<BuilderScope>>(mut self, scope: &P) -> Self {
+    pub fn scope(mut self, scope: &impl IsA<BuilderScope>) -> Self {
         self.scope = Some(scope.clone().upcast());
         self
     }

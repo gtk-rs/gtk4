@@ -35,9 +35,9 @@ glib::wrapper! {
 
 impl Viewport {
     #[doc(alias = "gtk_viewport_new")]
-    pub fn new<P: IsA<Adjustment>, Q: IsA<Adjustment>>(
-        hadjustment: Option<&P>,
-        vadjustment: Option<&Q>,
+    pub fn new(
+        hadjustment: Option<&impl IsA<Adjustment>>,
+        vadjustment: Option<&impl IsA<Adjustment>>,
     ) -> Viewport {
         assert_initialized_main_thread!();
         unsafe {
@@ -69,7 +69,7 @@ impl Viewport {
     }
 
     #[doc(alias = "gtk_viewport_set_child")]
-    pub fn set_child<P: IsA<Widget>>(&self, child: Option<&P>) {
+    pub fn set_child(&self, child: Option<&impl IsA<Widget>>) {
         unsafe {
             ffi::gtk_viewport_set_child(
                 self.to_glib_none().0,
@@ -89,7 +89,7 @@ impl Viewport {
     }
 
     #[doc(alias = "child")]
-    pub fn connect_child_notify<F: Fn(&Viewport) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_child_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_child_trampoline<F: Fn(&Viewport) + 'static>(
             this: *mut ffi::GtkViewport,
             _param_spec: glib::ffi::gpointer,
@@ -112,10 +112,7 @@ impl Viewport {
     }
 
     #[doc(alias = "scroll-to-focus")]
-    pub fn connect_scroll_to_focus_notify<F: Fn(&Viewport) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_scroll_to_focus_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_scroll_to_focus_trampoline<F: Fn(&Viewport) + 'static>(
             this: *mut ffi::GtkViewport,
             _param_spec: glib::ffi::gpointer,
@@ -303,7 +300,7 @@ impl ViewportBuilder {
             .expect("Failed to create an instance of Viewport")
     }
 
-    pub fn child<P: IsA<Widget>>(mut self, child: &P) -> Self {
+    pub fn child(mut self, child: &impl IsA<Widget>) -> Self {
         self.child = Some(child.clone().upcast());
         self
     }
@@ -373,7 +370,7 @@ impl ViewportBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }
@@ -463,7 +460,7 @@ impl ViewportBuilder {
         self
     }
 
-    pub fn hadjustment<P: IsA<Adjustment>>(mut self, hadjustment: &P) -> Self {
+    pub fn hadjustment(mut self, hadjustment: &impl IsA<Adjustment>) -> Self {
         self.hadjustment = Some(hadjustment.clone().upcast());
         self
     }
@@ -473,7 +470,7 @@ impl ViewportBuilder {
         self
     }
 
-    pub fn vadjustment<P: IsA<Adjustment>>(mut self, vadjustment: &P) -> Self {
+    pub fn vadjustment(mut self, vadjustment: &impl IsA<Adjustment>) -> Self {
         self.vadjustment = Some(vadjustment.clone().upcast());
         self
     }

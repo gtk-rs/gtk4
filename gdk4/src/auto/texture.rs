@@ -26,7 +26,7 @@ impl Texture {
 
     #[doc(alias = "gdk_texture_new_from_file")]
     #[doc(alias = "new_from_file")]
-    pub fn from_file<P: IsA<gio::File>>(file: &P) -> Result<Texture, glib::Error> {
+    pub fn from_file(file: &impl IsA<gio::File>) -> Result<Texture, glib::Error> {
         assert_initialized_main_thread!();
         unsafe {
             let mut error = ptr::null_mut();

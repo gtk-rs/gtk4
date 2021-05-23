@@ -249,9 +249,9 @@ impl PrintJob {
     }
 
     #[doc(alias = "gtk_print_job_set_source_file")]
-    pub fn set_source_file<P: AsRef<std::path::Path>>(
+    pub fn set_source_file(
         &self,
-        filename: P,
+        filename: impl AsRef<std::path::Path>,
     ) -> Result<(), glib::Error> {
         unsafe {
             let mut error = ptr::null_mut();
@@ -294,7 +294,7 @@ impl PrintJob {
     }
 
     #[doc(alias = "status-changed")]
-    pub fn connect_status_changed<F: Fn(&PrintJob) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_status_changed<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn status_changed_trampoline<F: Fn(&PrintJob) + 'static>(
             this: *mut ffi::GtkPrintJob,
             f: glib::ffi::gpointer,
@@ -316,7 +316,7 @@ impl PrintJob {
     }
 
     #[doc(alias = "track-print-status")]
-    pub fn connect_track_print_status_notify<F: Fn(&PrintJob) + 'static>(
+    pub fn connect_track_print_status_notify<F: Fn(&Self) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {

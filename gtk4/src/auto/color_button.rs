@@ -108,7 +108,7 @@ impl ColorButton {
     }
 
     #[doc(alias = "color-set")]
-    pub fn connect_color_set<F: Fn(&ColorButton) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_color_set<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn color_set_trampoline<F: Fn(&ColorButton) + 'static>(
             this: *mut ffi::GtkColorButton,
             f: glib::ffi::gpointer,
@@ -130,7 +130,7 @@ impl ColorButton {
     }
 
     #[doc(alias = "modal")]
-    pub fn connect_modal_notify<F: Fn(&ColorButton) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_modal_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_modal_trampoline<F: Fn(&ColorButton) + 'static>(
             this: *mut ffi::GtkColorButton,
             _param_spec: glib::ffi::gpointer,
@@ -153,10 +153,7 @@ impl ColorButton {
     }
 
     #[doc(alias = "show-editor")]
-    pub fn connect_show_editor_notify<F: Fn(&ColorButton) + 'static>(
-        &self,
-        f: F,
-    ) -> SignalHandlerId {
+    pub fn connect_show_editor_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_show_editor_trampoline<F: Fn(&ColorButton) + 'static>(
             this: *mut ffi::GtkColorButton,
             _param_spec: glib::ffi::gpointer,
@@ -179,7 +176,7 @@ impl ColorButton {
     }
 
     #[doc(alias = "title")]
-    pub fn connect_title_notify<F: Fn(&ColorButton) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_title_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_title_trampoline<F: Fn(&ColorButton) + 'static>(
             this: *mut ffi::GtkColorButton,
             _param_spec: glib::ffi::gpointer,
@@ -444,7 +441,7 @@ impl ColorButtonBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }

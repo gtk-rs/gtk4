@@ -87,7 +87,7 @@ impl WindowControls {
     }
 
     #[doc(alias = "decoration-layout")]
-    pub fn connect_decoration_layout_notify<F: Fn(&WindowControls) + 'static>(
+    pub fn connect_decoration_layout_notify<F: Fn(&Self) + 'static>(
         &self,
         f: F,
     ) -> SignalHandlerId {
@@ -115,7 +115,7 @@ impl WindowControls {
     }
 
     #[doc(alias = "empty")]
-    pub fn connect_empty_notify<F: Fn(&WindowControls) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_empty_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_empty_trampoline<F: Fn(&WindowControls) + 'static>(
             this: *mut ffi::GtkWindowControls,
             _param_spec: glib::ffi::gpointer,
@@ -138,7 +138,7 @@ impl WindowControls {
     }
 
     #[doc(alias = "side")]
-    pub fn connect_side_notify<F: Fn(&WindowControls) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_side_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_side_trampoline<F: Fn(&WindowControls) + 'static>(
             this: *mut ffi::GtkWindowControls,
             _param_spec: glib::ffi::gpointer,
@@ -380,7 +380,7 @@ impl WindowControlsBuilder {
         self
     }
 
-    pub fn layout_manager<P: IsA<LayoutManager>>(mut self, layout_manager: &P) -> Self {
+    pub fn layout_manager(mut self, layout_manager: &impl IsA<LayoutManager>) -> Self {
         self.layout_manager = Some(layout_manager.clone().upcast());
         self
     }

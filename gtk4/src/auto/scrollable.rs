@@ -46,13 +46,13 @@ pub trait ScrollableExt: 'static {
     fn vscroll_policy(&self) -> ScrollablePolicy;
 
     #[doc(alias = "gtk_scrollable_set_hadjustment")]
-    fn set_hadjustment<P: IsA<Adjustment>>(&self, hadjustment: Option<&P>);
+    fn set_hadjustment(&self, hadjustment: Option<&impl IsA<Adjustment>>);
 
     #[doc(alias = "gtk_scrollable_set_hscroll_policy")]
     fn set_hscroll_policy(&self, policy: ScrollablePolicy);
 
     #[doc(alias = "gtk_scrollable_set_vadjustment")]
-    fn set_vadjustment<P: IsA<Adjustment>>(&self, vadjustment: Option<&P>);
+    fn set_vadjustment(&self, vadjustment: Option<&impl IsA<Adjustment>>);
 
     #[doc(alias = "gtk_scrollable_set_vscroll_policy")]
     fn set_vscroll_policy(&self, policy: ScrollablePolicy);
@@ -118,7 +118,7 @@ impl<O: IsA<Scrollable>> ScrollableExt for O {
         }
     }
 
-    fn set_hadjustment<P: IsA<Adjustment>>(&self, hadjustment: Option<&P>) {
+    fn set_hadjustment(&self, hadjustment: Option<&impl IsA<Adjustment>>) {
         unsafe {
             ffi::gtk_scrollable_set_hadjustment(
                 self.as_ref().to_glib_none().0,
@@ -136,7 +136,7 @@ impl<O: IsA<Scrollable>> ScrollableExt for O {
         }
     }
 
-    fn set_vadjustment<P: IsA<Adjustment>>(&self, vadjustment: Option<&P>) {
+    fn set_vadjustment(&self, vadjustment: Option<&impl IsA<Adjustment>>) {
         unsafe {
             ffi::gtk_scrollable_set_vadjustment(
                 self.as_ref().to_glib_none().0,
@@ -156,13 +156,14 @@ impl<O: IsA<Scrollable>> ScrollableExt for O {
 
     #[doc(alias = "hadjustment")]
     fn connect_hadjustment_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_hadjustment_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_hadjustment_trampoline<
+            P: IsA<Scrollable>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkScrollable,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Scrollable>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Scrollable::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -181,13 +182,14 @@ impl<O: IsA<Scrollable>> ScrollableExt for O {
 
     #[doc(alias = "hscroll-policy")]
     fn connect_hscroll_policy_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_hscroll_policy_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_hscroll_policy_trampoline<
+            P: IsA<Scrollable>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkScrollable,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Scrollable>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Scrollable::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -206,13 +208,14 @@ impl<O: IsA<Scrollable>> ScrollableExt for O {
 
     #[doc(alias = "vadjustment")]
     fn connect_vadjustment_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_vadjustment_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_vadjustment_trampoline<
+            P: IsA<Scrollable>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkScrollable,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Scrollable>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Scrollable::from_glib_borrow(this).unsafe_cast_ref())
         }
@@ -231,13 +234,14 @@ impl<O: IsA<Scrollable>> ScrollableExt for O {
 
     #[doc(alias = "vscroll-policy")]
     fn connect_vscroll_policy_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_vscroll_policy_trampoline<P, F: Fn(&P) + 'static>(
+        unsafe extern "C" fn notify_vscroll_policy_trampoline<
+            P: IsA<Scrollable>,
+            F: Fn(&P) + 'static,
+        >(
             this: *mut ffi::GtkScrollable,
             _param_spec: glib::ffi::gpointer,
             f: glib::ffi::gpointer,
-        ) where
-            P: IsA<Scrollable>,
-        {
+        ) {
             let f: &F = &*(f as *const F);
             f(&Scrollable::from_glib_borrow(this).unsafe_cast_ref())
         }

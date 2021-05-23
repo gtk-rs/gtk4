@@ -49,9 +49,9 @@ impl CellAreaBox {
     }
 
     #[doc(alias = "gtk_cell_area_box_pack_end")]
-    pub fn pack_end<P: IsA<CellRenderer>>(
+    pub fn pack_end(
         &self,
-        renderer: &P,
+        renderer: &impl IsA<CellRenderer>,
         expand: bool,
         align: bool,
         fixed: bool,
@@ -68,9 +68,9 @@ impl CellAreaBox {
     }
 
     #[doc(alias = "gtk_cell_area_box_pack_start")]
-    pub fn pack_start<P: IsA<CellRenderer>>(
+    pub fn pack_start(
         &self,
-        renderer: &P,
+        renderer: &impl IsA<CellRenderer>,
         expand: bool,
         align: bool,
         fixed: bool,
@@ -94,7 +94,7 @@ impl CellAreaBox {
     }
 
     #[doc(alias = "spacing")]
-    pub fn connect_spacing_notify<F: Fn(&CellAreaBox) + 'static>(&self, f: F) -> SignalHandlerId {
+    pub fn connect_spacing_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn notify_spacing_trampoline<F: Fn(&CellAreaBox) + 'static>(
             this: *mut ffi::GtkCellAreaBox,
             _param_spec: glib::ffi::gpointer,
@@ -161,7 +161,7 @@ impl CellAreaBoxBuilder {
         self
     }
 
-    pub fn focus_cell<P: IsA<CellRenderer>>(mut self, focus_cell: &P) -> Self {
+    pub fn focus_cell(mut self, focus_cell: &impl IsA<CellRenderer>) -> Self {
         self.focus_cell = Some(focus_cell.clone().upcast());
         self
     }
