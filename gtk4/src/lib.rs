@@ -221,9 +221,11 @@ pub(crate) static TEST_THREAD_WORKER: once_cell::sync::Lazy<glib::ThreadPool> =
 mod auto;
 
 #[macro_use]
-pub mod subclass;
+mod entry_buffer;
 #[macro_use]
 mod expression;
+#[macro_use]
+pub mod subclass;
 
 pub mod prelude;
 
@@ -260,11 +262,11 @@ mod drop_down;
 mod drop_target;
 mod editable;
 mod entry;
-mod entry_buffer;
 mod entry_completion;
 mod enums;
 mod event_controller_key;
 mod expression_watch;
+mod file_chooser;
 mod file_chooser_dialog;
 mod flags;
 mod flow_box;
@@ -296,6 +298,7 @@ mod param_spec_expression;
 #[cfg(any(target_os = "linux", feature = "dox"))]
 #[cfg_attr(feature = "dox", doc(cfg(target_os = "linux")))]
 mod print_job;
+mod print_settings;
 mod property_expression;
 mod recent_data;
 mod requisition;

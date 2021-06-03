@@ -257,7 +257,6 @@ ignore = [
 ]
 
 manual = [
-    # "GObject.ObjectClass",
     # TODO "GLib.Scanner",
     "cairo.Context",
     "cairo.FontOptions",
@@ -1054,12 +1053,20 @@ manual_traits = ["EntryBufferExtManual"]
     name = "set_text"
     manual = true
     doc_trait_name = "EntryBufferExtManual"
+    [[object.function]]
+    name = "emit_deleted_text"
+    manual = true
+    doc_trait_name = "EntryBufferExtManual"
+    [[object.function]]
+    name = "emit_inserted_text"
+    manual = true
+    doc_trait_name = "EntryBufferExtManual"
     [[object.signal]]
     name = "deleted-text"
-    ignore = true # TODO: implement me
+    ignore = true
     [[object.signal]]
     name = "inserted-text"
-    ignore = true # TODO: implement me
+    ignore = true
 
 [[object]]
 name = "Gtk.EntryCompletion"
@@ -1137,9 +1144,10 @@ final_type = true
 name = "Gtk.FileChooser"
 status = "generate"
 trust_return_value_nullability = false
+manual_traits = ["FileChooserExtManual"]
     [[object.function]]
     name = "add_choice"
-    ignore = true # TODO: strange type of options and option_labels
+    manual = true # handle options_id & options_labels
 
 [[object]]
 name = "Gtk.FileChooserDialog"
@@ -1721,7 +1729,7 @@ trust_return_value_nullability = false
         nullable = false
     [[object.function]]
     name = "set_page_ranges"
-    ignore = true # TODO: implement me
+    manual = true # use &[&PageRange] instead of &[PageRange]
     [[object.function]]
     name = "set_paper_size"
         [[object.function.parameter]]
