@@ -13300,7 +13300,11 @@ extern "C" {
     //=========================================================================
     // GtkPasswordEntryBuffer
     //=========================================================================
+    #[cfg(any(feature = "v4_4", feature = "dox"))]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v4_4")))]
     pub fn gtk_password_entry_buffer_get_type() -> GType;
+    #[cfg(any(feature = "v4_4", feature = "dox"))]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v4_4")))]
     pub fn gtk_password_entry_buffer_new() -> *mut GtkEntryBuffer;
 
     //=========================================================================
