@@ -342,6 +342,7 @@ manual = [
     "Gtk.RecentData",
     "Gtk.Requisition",
     "Gtk.ResponseType",
+    "Gtk.TreeIter",
     "Pango.Alignment",
     "Pango.AttrList",
     "Pango.Context",
@@ -2095,12 +2096,6 @@ status = "generate"
         [[object.function.parameter]]
         name = "path"
         const = true
-
-[[object]]
-name = "Gtk.TreeIter"
-status = "generate"
-init_function_expression = "|_ptr| ()"
-clear_function_expression = "|_ptr| ()"
 
 [[object]]
 name = "Gtk.TreeListModel"
